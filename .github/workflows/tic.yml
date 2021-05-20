@@ -98,6 +98,18 @@ jobs:
         if: runner.os == 'macOS' && matrix.config.pkgdown != ''
         run: brew install harfbuzz fribidi
 
+      - name: "Install XQuartz"
+        if: runner.os == 'macOS'
+        run: brew install xquartz
+
+      - name: "Install ImageMagick Macintosh"
+        if: runner.os == 'macOS'
+        run: brew install imagemagick
+
+      - name: "Install ImageMagick Ubuntu"
+        if: runner.os == 'Linux'
+        run: sudo apt-get install imagemagick
+
       - name: Install freetype on MacOS
         if: runner.os == 'macOS'
         run: |
@@ -110,7 +122,11 @@ jobs:
 
       - name: "install R package requirements"
         if: runner.os == 'Linux'
-        run: Rscript -e "install.packages(c('sf', 'leafgl', 'exactextractr'))"
+        run: Rscript -e "install.packages(c('sf', 'leafgl', 'exactextractr', 'CopernicusDEM', 'DT', 'magick', 'glue'))"
+
+      - name: "install 'rgl' R package from Github"
+        if: runner.os == 'macOS'
+        run: Rscript -e "remotes::install_github('dmurdoch/rgl')"
 
       - name: "[Stage] Install"
         if: matrix.config.os != 'macOS-latest' || matrix.config.r != 'devel'
