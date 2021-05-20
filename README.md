@@ -1,4 +1,5 @@
 
+[![tic](https://github.com/mlampros/fitbitViz/workflows/tic/badge.svg?branch=master)](https://github.com/mlampros/fitbitViz/actions)
 [![codecov.io](https://codecov.io/github/mlampros/fitbitViz/coverage.svg?branch=master)](https://codecov.io/github/mlampros/fitbitViz?branch=master)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/fitbitViz)](http://cran.r-project.org/package=fitbitViz)
 [![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/fitbitViz?color=blue)](http://www.r-pkg.org/pkg/fitbitViz)
