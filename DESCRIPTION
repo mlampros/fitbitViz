@@ -1,0 +1,53 @@
+Package: fitbitViz
+Type: Package
+Title: Fitbit Visualizations
+Version: 1.0.1
+Date: 2021-05-20
+Authors@R: c( person(given = "Lampros", family = "Mouselimis", email = "mouselimislampros@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "https://orcid.org/0000-0002-8024-1546")) )
+Maintainer: Lampros Mouselimis <mouselimislampros@gmail.com>
+URL: https://github.com/mlampros/fitbitViz
+Description: Connection to the 'Fitbit' Web API by including 'ggplot2' Visualizations, 'Leaflet' and 3-dimensional 'Rayshader' Maps. The 3-dimensional 'Rayshader' Map requires the installation of the 'CopernicusDEM' R package which includes the 30- and 90-meter elevation data.
+License: GPL-3
+Encoding: UTF-8
+SystemRequirements: update: apt-get -y update (deb)
+Depends: R(>= 3.5)
+Imports:
+    glue, 
+    httr, 
+    jsonlite, 
+    ggplot2, 
+    lubridate, 
+    patchwork, 
+    data.table, 
+    stats, 
+    viridis, 
+    scales, 
+    ggthemes, 
+    varian, 
+    paletteer, 
+    XML, 
+    hms, 
+    leaflet, 
+    sf, 
+    rstudioapi, 
+    grDevices, 
+    leafgl, 
+    raster, 
+    exactextractr, 
+    sp, 
+    magrittr, 
+    rayshader,
+    OpenImageR,
+    geodist,
+    utils
+Suggests: 
+    CopernicusDEM,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    DT,
+    rgl,
+    magick
+RoxygenNote: 7.1.1
+VignetteBuilder: knitr
+Config/testthat/edition: 3
