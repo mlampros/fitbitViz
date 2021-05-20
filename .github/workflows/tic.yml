@@ -121,7 +121,6 @@ jobs:
         run: Rscript -e "install.packages(c('sf', 'leafgl', 'exactextractr', 'CopernicusDEM', 'DT', 'magick', 'glue'))"
 
       - name: "install 'rgl' R package from Github"
-        if: runner.os == 'macOS'
         run: Rscript -e "remotes::install_github('dmurdoch/rgl')"
 
       - name: "[Stage] Install"
