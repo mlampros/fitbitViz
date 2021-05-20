@@ -237,7 +237,7 @@ remotes::install_github('mlampros/fitbitViz')
 <br>
 
 If you use the **fitbitViz** R package in your paper or research please
-cite <https://cran.r-project.org/web/packages/fitbitViz/citation.html>:
+cite `https://CRAN.R-project.org/package=fitbitViz`:
 
 <br>
 

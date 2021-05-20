@@ -1,2 +1,5 @@
 ^README.Rmd
 ^docs
+^\.ccache$
+^\.github$
+^tic\.R$
