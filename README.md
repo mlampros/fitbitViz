@@ -15,6 +15,9 @@ visualization of *‘ggplot2’*, *‘Leaflet’* and *3-dimensionsal
 ‘Rayshader’ Maps* using the [Fitbit Web
 API](https://dev.fitbit.com/build/reference/web-api/). If you own any of
 the **Fitbit activity trackers** you can take advantage of this package.
+A detailed explanation of the functionality can be found both in the
+Vignette and in the [blog
+post](http://mlampros.github.io/2021/05/20/fitbitViz_package/).
 
 The 3-dimensional Rayshader Map requires the installation of the
 [CopernicusDEM](https://github.com/mlampros/CopernicusDEM) R package
