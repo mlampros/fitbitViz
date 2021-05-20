@@ -88,7 +88,7 @@ jobs:
 
       - name: "[Custom block] [Linux] Install spatial libraries"
         if: runner.os == 'Linux'
-        run: sudo apt-get install libgdal-dev libproj-dev libgeos-dev libudunits2-dev
+        run: sudo apt-get install libgdal-dev libproj-dev libgeos-dev libudunits2-dev libmagick++-dev
 
       - name: "[Stage] [macOS] Install libgit2"
         if: runner.os == 'macOS'
@@ -105,10 +105,6 @@ jobs:
       - name: "Install ImageMagick Macintosh"
         if: runner.os == 'macOS'
         run: brew install imagemagick
-
-      - name: "Install ImageMagick Ubuntu"
-        if: runner.os == 'Linux'
-        run: sudo apt-get install imagemagick
 
       - name: Install freetype on MacOS
         if: runner.os == 'macOS'
