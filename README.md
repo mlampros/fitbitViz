@@ -164,14 +164,16 @@ file) at it’s current state the application takes:
     depending on your wake up time)
 -   **asc\_desc\_linestring**: this parameter is related to the GPS data
     of the **3-dimensional** map especially if you keep track of your
-    outdoor activities. There are **3 options**:
-    -   by specifying **asc\_desc\_linestring="";** a single LINESTRING
+    outdoor activities. There are **3 options** but before making use of
+    the **2nd. option make sure** that there is an ascending and
+    descending route, otherwise it will give an error:
+    1.  by specifying **asc\_desc\_linestring="";** a single LINESTRING
         will be created based on the GPS data using a single color
-    -   by specifying **asc\_desc\_linestring=“TRUE”;** the LINESTRING
+    2.  by specifying **asc\_desc\_linestring=“TRUE”;** the LINESTRING
         of the GPS data will be split into 2 parts using the highest
         elevation location as a split point (**blue** color for the
         ascending part and **red** color for the descending part)
-    -   by specifying **asc\_desc\_linestring=“17H 5M 0S”;** the GPS
+    3.  by specifying **asc\_desc\_linestring=“17H 5M 0S”;** the GPS
         data will be split into 2 parts using this input time as split
         point (adjust the time based on your data)
 -   **time\_zone**: your current time zone as specified in

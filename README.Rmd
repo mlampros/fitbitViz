@@ -93,10 +93,10 @@ Regarding the **fitbitViz** parameters ([.github/workflows/gh_fitbit_blog.yaml](
 * **DATE**: this parameter corresponds to the current Date ( the Date that the **Cron-Job** runs ). You can set this parameter also to a character string such as **DATE="2021-05-16";** if you want to use as the end Date this specific date.
 * **sleep_time_begins**: this is your scheduled sleep time in form of a **lubridate::hms("00H 40M 0S")** object (adjust the input depending on your sleep time)
 * **sleep_time_ends**: this is your scheduled wake up time in form of a **lubridate::hms("08H 00M 0S")** object (adjust the input depending on your wake up time)
-* **asc_desc_linestring**: this parameter is related to the GPS data of the **3-dimensional** map especially if you keep track of your outdoor activities. There are **3 options**:
-    * by specifying **asc_desc_linestring="";** a single LINESTRING will be created based on the GPS data using a single color
-    * by specifying **asc_desc_linestring="TRUE";** the LINESTRING of the GPS data will be split into 2 parts using the highest elevation location as a split point (**blue** color for the ascending part and **red** color for the descending part)
-    * by specifying **asc_desc_linestring="17H 5M 0S";** the GPS data will be split into 2 parts using this input time as split point (adjust the time based on your data)
+* **asc_desc_linestring**: this parameter is related to the GPS data of the **3-dimensional** map especially if you keep track of your outdoor activities. There are **3 options** but before making use of the **2nd. option make sure** that there is an ascending and descending route, otherwise it will give an error:
+    1. by specifying **asc_desc_linestring="";** a single LINESTRING will be created based on the GPS data using a single color
+    2. by specifying **asc_desc_linestring="TRUE";** the LINESTRING of the GPS data will be split into 2 parts using the highest elevation location as a split point (**blue** color for the ascending part and **red** color for the descending part)
+    3. by specifying **asc_desc_linestring="17H 5M 0S";** the GPS data will be split into 2 parts using this input time as split point (adjust the time based on your data)
 * **time_zone**: your current time zone as specified in **lubridate::ymd_hms(tz = ..)** function (it defaults to my current time zone which is **Europe/Athens**)
 * **buffer_meters**: this parameter extends the 3-dimensional map by **N-meters** (the current default value is **1500** meters)
 * **resolution_dem**: this parameter takes either **30** or **90** and corresponds to the resolution of the Copernicus elevation data (the current default value is **30** meters)
