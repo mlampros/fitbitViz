@@ -104,7 +104,8 @@ website](https://mlampros.github.io/fitbitVizBlog/). The following steps
 explain in detail how this can be achieved:
 
 -   Fork the [fitbitVizBlog](https://github.com/mlampros/fitbitVizBlog)
-    repository
+    repository ( **!!! Not this repository but the one that includes the
+    blog posts !!!** )
 -   Create the following **secrets** required for the
     [.github/workflows/gh\_fitbit\_blog.yaml](https://github.com/mlampros/fitbitVizBlog/blob/master/.github/workflows/gh_fitbit_blog.yaml)
     file by navigating to **Settings** &gt;&gt; **secrets** (*be aware
