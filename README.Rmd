@@ -88,8 +88,8 @@ What it remains is to modify the [.github/workflows/gh_fitbit_blog.yaml](https:/
 
 Regarding the **fitbitViz** parameters ([.github/workflows/gh_fitbit_blog.yaml](https://github.com/mlampros/fitbitVizBlog/blob/master/.github/workflows/gh_fitbit_blog.yaml) file) at it's current state the application takes:
 
+* **DATE**: this parameter corresponds to the current Date ( the Date that the **Cron-Job** runs ). You can set this parameter also to a character string such as **DATE="2021-05-16";** if you want to use as the end Date this specific date. **Be Aware** this parameter is defined in a separate github action step.
 * **previous_n_days**: this parameter specifies the number of days before the current **DATE** for which the Fitbit data will be downloaded (I've set it to **6** to visualize and access data of the **last** week)
-* **DATE**: this parameter corresponds to the current Date ( the Date that the **Cron-Job** runs ). You can set this parameter also to a character string such as **DATE="2021-05-16";** if you want to use as the end Date this specific date.
 * **sleep_time_begins**: this is your scheduled sleep time in form of a **lubridate::hms("00H 40M 0S")** object (adjust the input depending on your sleep time)
 * **sleep_time_ends**: this is your scheduled wake up time in form of a **lubridate::hms("08H 00M 0S")** object (adjust the input depending on your wake up time)
 * **asc_desc_linestring**: this parameter is related to the GPS data of the **3-dimensional** map especially if you keep track of your outdoor activities. There are **3 options** but before making use of the **2nd. option make sure** that there is an ascending and descending route, otherwise it will give an error:

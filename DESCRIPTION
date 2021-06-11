@@ -6,7 +6,7 @@ Date: 2021-05-20
 Authors@R: c( person(given = "Lampros", family = "Mouselimis", email = "mouselimislampros@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "https://orcid.org/0000-0002-8024-1546")) )
 Maintainer: Lampros Mouselimis <mouselimislampros@gmail.com>
 URL: https://github.com/mlampros/fitbitViz
-Description: Connection to the 'Fitbit' Web API by including 'ggplot2' Visualizations, 'Leaflet' and 3-dimensional 'Rayshader' Maps. The 3-dimensional 'Rayshader' Map requires the installation of the 'CopernicusDEM' R package which includes the 30- and 90-meter elevation data.
+Description: Connection to the 'Fitbit' Web API <https://dev.fitbit.com/build/reference/web-api/> by including 'ggplot2' Visualizations, 'Leaflet' and 3-dimensional 'Rayshader' Maps. The 3-dimensional 'Rayshader' Map requires the installation of the 'CopernicusDEM' R package which includes the 30- and 90-meter elevation data.
 License: GPL-3
 Encoding: UTF-8
 SystemRequirements: update: apt-get -y update (deb)

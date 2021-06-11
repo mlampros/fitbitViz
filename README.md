@@ -152,14 +152,15 @@ Regarding the **fitbitViz** parameters
 ([.github/workflows/gh\_fitbit\_blog.yaml](https://github.com/mlampros/fitbitVizBlog/blob/master/.github/workflows/gh_fitbit_blog.yaml)
 file) at it’s current state the application takes:
 
+-   **DATE**: this parameter corresponds to the current Date ( the Date
+    that the **Cron-Job** runs ). You can set this parameter also to a
+    character string such as **DATE=“2021-05-16”;** if you want to use
+    as the end Date this specific date. **Be Aware** this parameter is
+    defined in a separate github action step.
 -   **previous\_n\_days**: this parameter specifies the number of days
     before the current **DATE** for which the Fitbit data will be
     downloaded (I’ve set it to **6** to visualize and access data of the
     **last** week)
--   **DATE**: this parameter corresponds to the current Date ( the Date
-    that the **Cron-Job** runs ). You can set this parameter also to a
-    character string such as **DATE=“2021-05-16”;** if you want to use
-    as the end Date this specific date.
 -   **sleep\_time\_begins**: this is your scheduled sleep time in form
     of a **lubridate::hms(“00H 40M 0S”)** object (adjust the input
     depending on your sleep time)
