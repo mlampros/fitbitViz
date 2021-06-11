@@ -112,6 +112,13 @@ jobs:
           brew install freetype
           brew link --overwrite freetype
 
+      - name: "Install spatial libraries on MacOS (copied from https://github.com/r-spatial/sf/blob/master/.github/workflows/tic-db.yml#L99)"
+        if: runner.os == 'macOS'
+        run: |
+          # conflicts with gfortran from r-lib/actions when linking gcc
+          rm '/usr/local/bin/gfortran'
+          brew install pkg-config gdal proj geos
+
       - name: "[Stage] [Linux] Install system libs for pkgdown"
         if: runner.os == 'Linux' && matrix.config.pkgdown != ''
         run: sudo apt install libharfbuzz-dev libfribidi-dev
