@@ -3,3 +3,4 @@
 ^\.ccache$
 ^\.github$
 ^tic\.R$
+^Dockerfile$
