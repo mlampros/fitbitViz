@@ -27,12 +27,7 @@ RUN apt-get update \
                 texlive-luatex \
                 texlive-plain-generic \
                 texlive-science \
-                texlive-xetex \
-        && install.r binb linl pinp tint \
-        && mkdir ~/.R \
-        && echo _R_CHECK_FORCE_SUGGESTS_=FALSE > ~/.R/check.Renviron \
-        && cd /usr/local/bin \
-        && ln -s /usr/lib/R/site-library/littler/examples/render.r .
+                texlive-xetex
 
 RUN R -e "install.packages(c( 'glue', 'httr', 'jsonlite', 'ggplot2', 'lubridate', 'patchwork', 'data.table', 'stats', 'viridis', 'scales', 'ggthemes', 'varian', 'paletteer', 'XML', 'hms', 'leaflet', 'sf', 'rstudioapi', 'grDevices', 'leafgl', 'raster', 'exactextractr', 'sp', 'magrittr', 'rayshader', 'OpenImageR', 'geodist', 'utils', 'CopernicusDEM', 'testthat', 'knitr', 'rmarkdown', 'DT', 'rgl', 'magick', 'remotes' ), repos =  'https://cloud.r-project.org/' )"
 
