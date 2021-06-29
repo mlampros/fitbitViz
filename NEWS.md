@@ -1,4 +1,8 @@
 
+## fitbitViz 1.0.2
+
+* I've added the Dockerfile to build the image
+
 
 ## fitbitViz 1.0.1
 
