@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fitbitViz</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
       </span>
     </div>
 
@@ -126,6 +126,17 @@
       <small>Source: <a href='https://github.com/mlampros/fitbitViz/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="fitbitviz-102" class="section level2">
+<h2 class="hasAnchor">
+<a href="#fitbitviz-102" class="anchor"></a>fitbitViz 1.0.2</h2>
+<ul>
+<li>I’ve added the Dockerfile to build the image and I’ve modified the README.md file with instructions on how to use the image</li>
+<li>I’ve modified the <em>‘rayshader_3d_DEM()’</em> function by adding the <em>add_shadow_rescale_original</em> parameter (it defaults to FALSE) because I received: <em>Error: non-conformable arrays</em>
+</li>
+<li>I’ve modified the <em>‘meshgrids_XY_LatLon()’</em> function to suppress a warning due to the internal use of the <em>‘geodist::geodist()’</em> function</li>
+<li>I’ve set <em>‘eval = FALSE’</em> to the last code snippet in the vignette (call to <em>‘rgl’</em>) because I received <em>‘PhantomJS not found. You can install it with webshot::install_phantomjs()’</em> (the <em>webshot</em> package is not installed by default on CRAN)</li>
+</ul>
+</div>
     <div id="fitbitviz-101" class="section level2">
 <h2 class="hasAnchor">
 <a href="#fitbitviz-101" class="anchor"></a>fitbitViz 1.0.1</h2>

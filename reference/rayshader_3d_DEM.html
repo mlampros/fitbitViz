@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fitbitViz</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
       </span>
     </div>
 
@@ -140,6 +140,7 @@
   elevation_sample_points <span class='op'>=</span> <span class='cn'>NULL</span>,
   zoom <span class='op'>=</span> <span class='fl'>0.5</span>,
   windowsize <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1600</span>, <span class='fl'>1000</span><span class='op'>)</span>,
+  add_shadow_rescale_original <span class='op'>=</span> <span class='cn'>FALSE</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
@@ -175,6 +176,10 @@
       <td><p>a numeric vector specifying the window dimensions (x,y) of the output 3-dimensional map. The default vector is c(1600, 1000)</p></td>
     </tr>
     <tr>
+      <th>add_shadow_rescale_original</th>
+      <td><p>a boolean. If TRUE, then 'hillshade' will be scaled to match the dimensions of 'shadowmap'. See also the 'rayshader::add_shadow()' function for more information.</p></td>
+    </tr>
+    <tr>
       <th>verbose</th>
       <td><p>a boolean. If TRUE then information will be printed out in the console</p></td>
     </tr>
@@ -183,6 +188,9 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>it doesn't return an object but it displays a 3-dimensional 'rayshader' object</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>https://www.tylermw.com/a-step-by-step-guide-to-making-3d-maps-with-satellite-imagery-in-r/</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -303,10 +311,13 @@
 
 <span class='va'>ray_out</span> <span class='op'>=</span> <span class='fu'>rayshader_3d_DEM</span><span class='op'>(</span>rst_buf <span class='op'>=</span> <span class='va'>raysh_rst</span>,
                            rst_ext <span class='op'>=</span> <span class='va'>sf_rst_ext</span><span class='op'>$</span><span class='va'>raster_obj_extent</span>,
+                           rst_bbx <span class='op'>=</span> <span class='va'>sf_rst_ext</span><span class='op'>$</span><span class='va'>buffer_bbox</span>,
                            linestring_ASC_DESC <span class='op'>=</span> <span class='va'>linestring_dat</span>,
                            <span class='co'># elevation_sample_points = dat_3m,</span>
                            zoom <span class='op'>=</span> <span class='fl'>0.5</span>,
-                           windowsize <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1600</span>, <span class='fl'>1000</span><span class='op'>)</span><span class='op'>)</span>
+                           windowsize <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1600</span>, <span class='fl'>1000</span><span class='op'>)</span>,
+                           add_shadow_rescale_original <span class='op'>=</span> <span class='cn'>FALSE</span>,
+                           verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
   </div>
