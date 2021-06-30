@@ -1025,6 +1025,11 @@ leafGL_point_coords = function(dat_gps_tcx,
                                option_viewer = rstudioapi::viewer,
                                CRS = 4326) {
 
+  #.............................  reset the options on.exit()
+  init_options <- options()
+  on.exit(options(init_options))
+  #.............................
+
   options(viewer = option_viewer)
 
   dat_gps_tcx = sf::st_as_sf(dat_gps_tcx, coords = c("longitude", "latitude"))          # create a simple feature from lat, lon
@@ -1461,6 +1466,12 @@ meshgrids_XY_LatLon = function(longitude,
                                buffer_bbox,
                                distance_metric = "vincenty",
                                digits = 8) {
+
+  #.............................  reset the options on.exit()
+  init_options <- options()
+  on.exit(options(init_options))
+  #.............................
+
   options(digits = digits)
 
   DIMS = dim(buffer_raster)[1:2]
@@ -1493,12 +1504,12 @@ meshgrids_XY_LatLon = function(longitude,
 
   mt_input_coords = matrix(c(longitude, latitude), nrow = 1, ncol = 2)
 
-  dist_coords = geodist::geodist(x = seq_mt_coords[, 3:4],
-                                 y = mt_input_coords,
-                                 paired = FALSE,
-                                 sequential = FALSE,
-                                 pad = TRUE,
-                                 measure = distance_metric)
+  dist_coords = suppressMessages(geodist::geodist(x = seq_mt_coords[, 3:4],
+                                                  y = mt_input_coords,
+                                                  paired = FALSE,
+                                                  sequential = FALSE,
+                                                  pad = TRUE,
+                                                  measure = distance_metric))
 
   idx_min = which.min(dist_coords[, 1])[1]                        # keep the 1st. index in case that more than 1 coordinate pairs are close to the input (lat, lon) pair
   return(list(coords_row = seq_mt_coords[idx_min, ],
@@ -1516,10 +1527,15 @@ meshgrids_XY_LatLon = function(longitude,
 #' @param elevation_sample_points if NULL then this parameter will be ignored. Otherwise, it corresponds to a data.table with column names 'latitude', 'longitude' and 'AltitudeMeters'. For instance, it can consist of 3 or 4 rows that will be displayed as vertical lines in the 3-dimensionsal map to visualize sample locations of the route (the latitudes and longitudes must exist in the output data.table of the 'GPS_TCX_data()' function)
 #' @param zoom a float number. Lower values increase the 3-dimensional DEM output. The default value is 0.5
 #' @param windowsize a numeric vector specifying the window dimensions (x,y) of the output 3-dimensional map. The default vector is c(1600, 1000)
+#' @param add_shadow_rescale_original a boolean. If TRUE, then 'hillshade' will be scaled to match the dimensions of 'shadowmap'. See also the 'rayshader::add_shadow()' function for more information.
 #' @param verbose a boolean. If TRUE then information will be printed out in the console
 #' @return it doesn't return an object but it displays a 3-dimensional 'rayshader' object
 #'
 #' @export
+#'
+#' @references
+#'
+#' https://www.tylermw.com/a-step-by-step-guide-to-making-3d-maps-with-satellite-imagery-in-r/
 #'
 #' @importFrom sf st_bbox
 #' @importFrom glue glue
@@ -1644,10 +1660,13 @@ meshgrids_XY_LatLon = function(longitude,
 #'
 #' ray_out = rayshader_3d_DEM(rst_buf = raysh_rst,
 #'                            rst_ext = sf_rst_ext$raster_obj_extent,
+#'                            rst_bbx = sf_rst_ext$buffer_bbox,
 #'                            linestring_ASC_DESC = linestring_dat,
 #'                            # elevation_sample_points = dat_3m,
 #'                            zoom = 0.5,
-#'                            windowsize = c(1600, 1000))
+#'                            windowsize = c(1600, 1000),
+#'                            add_shadow_rescale_original = FALSE,
+#'                            verbose = TRUE)
 #' }
 
 
@@ -1658,12 +1677,13 @@ rayshader_3d_DEM = function(rst_buf,
                             elevation_sample_points = NULL,         # it works but it's possible that the a few vertical lines are not displayed in the right position
                             zoom = 0.5,
                             windowsize = c(1600, 1000),
+                            add_shadow_rescale_original = FALSE,
                             verbose = FALSE) {
 
-  elevation_aoi = rayshader::raster_to_matrix(rst_buf, verbose = verbose)
+  elevation_aoi = rayshader::raster_to_matrix(raster = rst_buf, verbose = verbose)
   rayshade_3d = rayshader::sphere_shade(heightmap = elevation_aoi, zscale = 0.95, texture = "desert", progbar = verbose)
   rayshade_3d = rayshader::add_water(hillshade = rayshade_3d, watermap = rayshader::detect_water(elevation_aoi), color = "desert")
-  rayshade_3d = rayshader::add_shadow(hillshade = rayshade_3d, rayshader::ray_shade(elevation_aoi, zscale = 3, maxsearch = 65), 0.5)
+  rayshade_3d = rayshader::add_shadow(hillshade = rayshade_3d, shadowmap = rayshader::ray_shade(elevation_aoi, zscale = 3, maxsearch = 65), max_darken = 0.5, rescale_original = add_shadow_rescale_original)
 
   if (!is.null(linestring_ASC_DESC)) {
     if (inherits(linestring_ASC_DESC, 'list')) {

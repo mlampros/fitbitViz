@@ -125,10 +125,10 @@ jobs:
 
       - name: "install R package requirements"
         if: runner.os == 'Linux'
-        run: Rscript -e "install.packages(c('sf', 'leafgl', 'exactextractr', 'CopernicusDEM', 'DT', 'magick', 'glue'))"
+        run: Rscript -e "install.packages(c('sf', 'leafgl', 'exactextractr', 'DT', 'magick', 'glue'))"
 
-      - name: "install 'rgl' R package from Github"
-        run: Rscript -e "remotes::install_github('dmurdoch/rgl')"
+      - name: "Install the Github versions of 'rgl', 'rayshader' and 'CopernicusDEM'"
+        run: Rscript -e "remotes::install_github(c('dmurdoch/rgl', 'tylermorganwall/rayshader', 'mlampros/CopernicusDEM'), upgrade = 'always', dependencies = TRUE, repos = 'https://cloud.r-project.org/')"
 
       - name: "[Stage] Install"
         if: matrix.config.os != 'macOS-latest' || matrix.config.r != 'devel'

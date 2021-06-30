@@ -226,6 +226,87 @@ by clicking to a **CSV** button as shown in the next image,
 
 <br>
 
+### Docker Image:
+
+<br>
+
+**Docker images** of the *fitbitViz* package are available to download
+from my [dockerhub](https://hub.docker.com/r/mlampros/fitbitviz)
+account. The images come with *Rstudio* and the *R-development* version
+(latest) installed. The whole process was tested on Ubuntu 18.04. To
+**pull** & **run** the image do the following,
+
+<br>
+
+``` r
+docker pull mlampros/fitbitviz:rstudiodev
+
+docker run -d --name rstudio_dev -e USER=rstudio -e PASSWORD=give_here_your_password --rm -p 8787:8787 mlampros/fitbitviz:rstudiodev
+```
+
+<br>
+
+The user can also **bind** a home directory / folder to the image to use
+its files by specifying the **-v** command,
+
+<br>
+
+``` r
+docker run -d --name rstudio_dev -e USER=rstudio -e PASSWORD=give_here_your_password --rm -p 8787:8787 -v /home/YOUR_DIR:/home/rstudio/YOUR_DIR mlampros/fitbitviz:rstudiodev
+
+```
+
+<br>
+
+In the latter case you might have first give permission privileges for
+write access to **YOUR\_DIR** directory (not necessarily) using,
+
+<br>
+
+``` r
+chmod -R 777 /home/YOUR_DIR
+
+```
+
+<br>
+
+The **USER** defaults to *rstudio* but you have to give your
+**PASSWORD** of preference (see
+[www.rocker-project.org](https://www.rocker-project.org/) for more
+information).
+
+<br>
+
+Open your web-browser and depending where the docker image was *build /
+run* give,
+
+<br>
+
+**1st. Option** on your personal computer,
+
+<br>
+
+``` r
+http://0.0.0.0:8787 
+```
+
+<br>
+
+**2nd. Option** on a cloud instance,
+
+<br>
+
+``` r
+http://Public DNS:8787
+```
+
+<br>
+
+to access the Rstudio console in order to give your username and
+password.
+
+<br>
+
 ### Package Installation & Citation:
 
 <br>

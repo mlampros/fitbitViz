@@ -12,6 +12,7 @@ rayshader_3d_DEM(
   elevation_sample_points = NULL,
   zoom = 0.5,
   windowsize = c(1600, 1000),
+  add_shadow_rescale_original = FALSE,
   verbose = FALSE
 )
 }
@@ -29,6 +30,8 @@ rayshader_3d_DEM(
 \item{zoom}{a float number. Lower values increase the 3-dimensional DEM output. The default value is 0.5}
 
 \item{windowsize}{a numeric vector specifying the window dimensions (x,y) of the output 3-dimensional map. The default vector is c(1600, 1000)}
+
+\item{add_shadow_rescale_original}{a boolean. If TRUE, then 'hillshade' will be scaled to match the dimensions of 'shadowmap'. See also the 'rayshader::add_shadow()' function for more information.}
 
 \item{verbose}{a boolean. If TRUE then information will be printed out in the console}
 }
@@ -157,9 +160,15 @@ linestring_dat = gps_lat_lon_to_LINESTRING(dat_gps_tcx = res_tcx,
 
 ray_out = rayshader_3d_DEM(rst_buf = raysh_rst,
                            rst_ext = sf_rst_ext$raster_obj_extent,
+                           rst_bbx = sf_rst_ext$buffer_bbox,
                            linestring_ASC_DESC = linestring_dat,
                            # elevation_sample_points = dat_3m,
                            zoom = 0.5,
-                           windowsize = c(1600, 1000))
+                           windowsize = c(1600, 1000),
+                           add_shadow_rescale_original = FALSE,
+                           verbose = TRUE)
 }
+}
+\references{
+https://www.tylermw.com/a-step-by-step-guide-to-making-3d-maps-with-satellite-imagery-in-r/
 }

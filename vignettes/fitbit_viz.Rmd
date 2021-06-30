@@ -549,7 +549,7 @@ and finally we visualize the *3-dimensional Rayshader Map*,
 
 <br>
 
-```{r, echo = TRUE}
+```{r, echo = TRUE, eval = FALSE}
 
 snapshot_rayshader_path = file.path(tempdir(), 'rayshader_img.png')
 
@@ -561,13 +561,19 @@ fitbitViz::rayshader_3d_DEM(rst_buf = raysh_rst,
                             linestring_ASC_DESC = linestring_dat,
                             elevation_sample_points = dat_3m,
                             zoom = 0.3,
-                            windowsize = c(1000, 800))
+                            windowsize = c(1000, 800),
+                            add_shadow_rescale_original = FALSE,
+                            verbose = TRUE)
 
 rgl::rgl.snapshot(snapshot_rayshader_path)
 rgl::par3d(mouseMode = "trackball")   # options: c("trackball", "polar", "zoom", "selecting")
 rgl::rglwidget()
 
 ```
+
+<br>
+
+![](./data_plots/rayshader_map.png)
 
 <br>
 
