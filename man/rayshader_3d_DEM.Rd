@@ -7,7 +7,6 @@
 rayshader_3d_DEM(
   rst_buf,
   rst_ext,
-  rst_bbx,
   linestring_ASC_DESC = NULL,
   elevation_sample_points = NULL,
   zoom = 0.5,
@@ -20,8 +19,6 @@ rayshader_3d_DEM(
 \item{rst_buf}{this parameter corresponds to the 'sfc_obj' object of the 'extend_AOI_buffer()' function}
 
 \item{rst_ext}{this parameter corresponds to the 'raster_obj_extent' object of the 'extend_AOI_buffer()' function}
-
-\item{rst_bbx}{this parameter corresponds to the 'buffer_bbox' object of the 'extend_AOI_buffer()' function}
 
 \item{linestring_ASC_DESC}{If NULL then this parameter will be ignored. Otherwise, it can be an 'sf' object or a named list of length 2 (that corresponds to the output of the 'gps_lat_lon_to_LINESTRING()' function)}
 
@@ -126,11 +123,9 @@ if (length(TIF) == 1) {
 
 raysh_rst = crop_DEM(tif_or_vrt_dem_file = file_out,
                      sf_buffer_obj = sf_rst_ext$sfc_obj,
-                     CRS = 4326,
-                     digits = 6,
                      verbose = TRUE)
 
-# sp::plot(raysh_rst)
+# terra::plot(raysh_rst)
 
 
 #................................................................
@@ -154,15 +149,24 @@ linestring_dat = gps_lat_lon_to_LINESTRING(dat_gps_tcx = res_tcx,
                                            CRS = 4326,
                                            time_split_asc_desc = NULL,
                                            verbose = TRUE)
+
+#.....................................................
+# Conversion of the 'SpatRaster' to a raster object
+# because the 'rayshader' package accepts only rasters
+#.....................................................
+
+rst_obj = raster::raster(raysh_rst)
+raster::projection(rst_obj) <- terra::crs(raysh_rst, proj = TRUE)
+
+
 #.....................................
 # open the 3-dimensional rayshader map
 #.....................................
 
-ray_out = rayshader_3d_DEM(rst_buf = raysh_rst,
+ray_out = rayshader_3d_DEM(rst_buf = rst_obj,
                            rst_ext = sf_rst_ext$raster_obj_extent,
-                           rst_bbx = sf_rst_ext$buffer_bbox,
                            linestring_ASC_DESC = linestring_dat,
-                           # elevation_sample_points = dat_3m,
+                           elevation_sample_points = dat_3m,
                            zoom = 0.5,
                            windowsize = c(1600, 1000),
                            add_shadow_rescale_original = FALSE,

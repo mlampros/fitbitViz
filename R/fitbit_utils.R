@@ -1087,10 +1087,10 @@ leafGL_point_coords = function(dat_gps_tcx,
 #'
 #' @export
 #'
-#' @importFrom sf st_as_sf st_bbox st_as_sfc st_transform st_buffer st_centroid st_coordinates
 #' @importFrom glue glue
 #' @importFrom raster extent
 #' @importFrom data.table data.table
+#' @importFrom sf st_as_sf st_bbox st_as_sfc st_transform st_buffer st_centroid st_coordinates
 #'
 #' @examples
 #'
@@ -1165,6 +1165,10 @@ extend_AOI_buffer = function(dat_gps_tcx,
   # cat(sf::st_as_text(dat_buf_bbx))
 
   if (verbose) cat("Use the bounding box to extract the raster extent ...\n")
+  # ............................................................................  keep this as a reference in case that I switch to terra
+  # inp_sf = sf::st_as_sf(x = sf::st_as_sfc(x = buf_bbx))                       # use an 'sf' object as input to 'terra::ext()', otherwise it won't work
+  # rst_ext = terra::ext(x = inp_sf)
+  # ............................................................................
   rst_ext = raster::extent(x = buf_bbx)
 
   if (verbose) cat("Compute the centroid of the sf-buffer object ...\n")
@@ -1189,18 +1193,12 @@ extend_AOI_buffer = function(dat_gps_tcx,
 #'
 #' @param tif_or_vrt_dem_file a valid path to the elevation .tif or .vrt file
 #' @param sf_buffer_obj a simple features ('sf') object that will be used to crop the input elevation raster file ('tif_or_vrt_dem_file' parameter)
-#' @param CRS an integer specifying the Coordinates Reference System. The recommended value for this data is 4326 (which is also the default value)
-#' @param digits the number of digits to use. It defaults to 6
 #' @param verbose a boolean. If TRUE then information will be printed out in the console
-#' @return an object of class raster
+#' @return an object of class SpatRaster
 #'
 #' @export
 #'
-#' @importFrom glue glue
-#' @importFrom raster raster rasterFromXYZ res
-#' @importFrom exactextractr exact_extract
-#' @importFrom sp CRS
-#' @importFrom data.table setDT
+#' @importFrom terra rast crs vect crop
 #'
 #' @examples
 #'
@@ -1287,47 +1285,70 @@ extend_AOI_buffer = function(dat_gps_tcx,
 #'
 #' raysh_rst = crop_DEM(tif_or_vrt_dem_file = file_out,
 #'                      sf_buffer_obj = sf_rst_ext$sfc_obj,
-#'                      CRS = 4326,
-#'                      digits = 6,
 #'                      verbose = TRUE)
 #'
-#' sp::plot(raysh_rst)
+#' terra::plot(raysh_rst)
 #'
 #' }
 
-
 crop_DEM = function(tif_or_vrt_dem_file,
                     sf_buffer_obj,
-                    CRS = 4326,
-                    digits = 6,
                     verbose = FALSE) {
 
   if (!file.exists(tif_or_vrt_dem_file)) stop(glue::glue("The  '{tif_or_vrt_dem_file}'  file does not exist or is not a valid one!"), call. = F)
 
-  if (verbose) cat("The raster will be red ...\n")
-  rst_elev = raster::raster(tif_or_vrt_dem_file)
+  if (verbose) cat("The raster will be uploaded ...\n")
+  rst = terra::rast(x = tif_or_vrt_dem_file)
+  proj_rst = trimws(terra::crs(x = rst, proj = TRUE), which = 'both')
 
-  if (verbose) cat("The AOI will be extracted from the raster DEM ...\n")
-  extr_buf = tryCatch(exactextractr::exact_extract(x = rst_elev,
-                                                   y = sf_buffer_obj,
-                                                   fun = function(value, cov_frac) value,
-                                                   progress = F,
-                                                   include_xy = TRUE),
-                      error = function(e) e)
+  if (verbose) cat("The 'sf' object will be converted to a spatial vector ...\n")
+  vec_crop = terra::vect(x = sf_buffer_obj)
+  proj_vec = trimws(terra::crs(x = vec_crop, proj = TRUE), which = 'both')
+  if (proj_rst != proj_vec) warning("The projection of the 'tif_or_vrt_dem_file' is not the same with the 'sf_buffer_obj'!")
 
-  crs = sp::CRS(glue::glue("+init=epsg:{CRS}"))
-
-  if (verbose) cat("A data.table will be created from the x,y,z vectors ...\n")
-  mt_upd = data.table::setDT(list(x = extr_buf$x,
-                                  y = extr_buf$y,
-                                  z = extr_buf$value))
-  mt_upd = as.matrix(mt_upd)
-  dimnames(mt_upd) = NULL
-
-  if (verbose) cat("A raster will be created from the x,y,z data.table ...\n")
-  rst_upd = raster::rasterFromXYZ(xyz = mt_upd, res = raster::res(rst_elev), crs = crs, digits = digits)
-  return(rst_upd)
+  if (verbose) cat("The raster will be cropped ...\n")
+  rst_crop = terra::crop(x = rst,
+                         y = vec_crop,
+                         snap = "out")      # snap = "in" gives NA's
+  return(rst_crop)
 }
+
+
+#................................................................................ Previous Function [ required more time and memory usage ]
+# crop_DEM = function(tif_or_vrt_dem_file,
+#                     sf_buffer_obj,
+#                     CRS = 4326,
+#                     digits = 6,
+#                     verbose = FALSE) {
+#
+#   if (!file.exists(tif_or_vrt_dem_file)) stop(glue::glue("The  '{tif_or_vrt_dem_file}'  file does not exist or is not a valid one!"), call. = F)
+#
+#   if (verbose) cat("The raster will be red ...\n")
+#   rst_elev = raster::raster(tif_or_vrt_dem_file)
+#
+#   if (verbose) cat("The AOI will be extracted from the raster DEM ...\n")
+#   extr_buf = tryCatch(exactextractr::exact_extract(x = rst_elev,
+#                                                    y = sf_buffer_obj,
+#                                                    fun = function(value, cov_frac) value,
+#                                                    progress = F,
+#                                                    include_xy = TRUE),
+#                       error = function(e) e)
+#
+#   crs = sp::CRS(glue::glue("+init=epsg:{CRS}"))
+#
+#   if (verbose) cat("A data.table will be created from the x,y,z vectors ...\n")
+#   mt_upd = data.table::setDT(list(x = extr_buf$x,
+#                                   y = extr_buf$y,
+#                                   z = extr_buf$value))
+#   mt_upd = as.matrix(mt_upd)
+#   dimnames(mt_upd) = NULL
+#
+#   if (verbose) cat("A raster will be created from the x,y,z data.table ...\n")
+#   rst_upd = raster::rasterFromXYZ(xyz = mt_upd, res = raster::res(rst_elev), crs = crs, digits = digits)
+#   return(rst_upd)
+# }
+#................................................................................
+
 
 
 #' Convert the GPS, TCX data to a LINESTRING
@@ -1430,7 +1451,7 @@ gps_lat_lon_to_LINESTRING = function(dat_gps_tcx,
   dat_gps_tcx = split(dat_gps_tcx, by = 'color_line')
 
   dat_line_str_ASC = sf::st_as_sf(dat_gps_tcx$blue, coords = c("longitude", "latitude"), crs = CRS) %>% sf::st_combine() %>% sf::st_cast("LINESTRING")          # see: https://github.com/r-spatial/sf/issues/321#issuecomment-489045859
-  # sp::plot(dat_line_str_ASC)
+  # plot(dat_line_str_ASC)
   dat_line_str_DESC = sf::st_as_sf(dat_gps_tcx$red, coords = c("longitude", "latitude"), crs = CRS) %>% sf::st_combine() %>% sf::st_cast("LINESTRING")
 
   return(list(line_ASC = dat_line_str_ASC,
@@ -1439,82 +1460,84 @@ gps_lat_lon_to_LINESTRING = function(dat_gps_tcx,
 
 
 
-#' Find the image (x,y)-coordinates using meshgrids of (lat,lon)-coordinates
-#'
-#' @param longitude a numeric value specifying the longitude
-#' @param latitude a numeric value specifying the latitude
-#' @param buffer_raster an object of class raster
-#' @param buffer_bbox a numeric vector specifying the bounding box
-#' @param distance_metric a character string specifying the distance metric, one of "haversine" "vincenty", "geodesic" or "cheap" (see the 'geodist::geodist()' function of the 'geodist' package)
-#' @param digits an integer value specifying the number of digits
-#' @return an object of class list
-#'
-#' @keywords internal
-#'
-#' @import OpenImageR
-#' @importFrom data.table setDT
-#' @importFrom geodist geodist
-#' @importFrom utils getFromNamespace
-#'
-#' @details
-#'
-#' I've used this workaround to label the rayshader 3d-plot because the 'lat', 'lon' parameters did not work properly
-
-meshgrids_XY_LatLon = function(longitude,
-                               latitude,
-                               buffer_raster,
-                               buffer_bbox,
-                               distance_metric = "vincenty",
-                               digits = 8) {
-
-  #.............................  reset the options on.exit()
-  init_options <- options()
-  on.exit(options(init_options))
-  #.............................
-
-  options(digits = digits)
-
-  DIMS = dim(buffer_raster)[1:2]
-
-  meshgrid_x_openim = utils::getFromNamespace(x = "meshgrid_x", ns = "OpenImageR")
-  meshgrid_y_openim = utils::getFromNamespace(x = "meshgrid_y", ns = "OpenImageR")
-
-  x = meshgrid_x_openim(rows = DIMS[1], cols = DIMS[2]) + 1
-  y = meshgrid_y_openim(rows = DIMS[1], cols = DIMS[2]) + 1
-
-  # grid_lat_lon = HiClimR::grid2D(lon = c(buffer_bbox['xmin'], buffer_bbox['xmax']),
-  #                                lat = c(buffer_bbox['ymin'], buffer_bbox['ymax']))               # it is not required, keep it as a reference
-
-  lon_seq = seq(from = buffer_bbox['xmin'], to = buffer_bbox['xmax'], length.out = DIMS[2])         # computation of longitudes column-wise (you can verify the direction on the web browser consulting a map)
-  lon_seq = lapply(1:DIMS[1], function(x) {
-    lon_seq
-  })
-  lon_seq = do.call(rbind, lon_seq)
-
-  lat_seq = seq(from = buffer_bbox['ymin'], to = buffer_bbox['ymax'], length.out = DIMS[1])         # computation of latitudes row-wise (you can verify the direction on the web browser consulting a map)
-  lat_seq = lapply(1:DIMS[2], function(x) {
-    lat_seq
-  })
-  lat_seq = do.call(cbind, lat_seq)
-
-  seq_mt_coords = data.table::setDT(list(x = as.vector(x),
-                                         y = as.vector(y),
-                                         longitude = as.vector(lon_seq),
-                                         latitude = as.vector(lat_seq)))
-
-  mt_input_coords = matrix(c(longitude, latitude), nrow = 1, ncol = 2)
-
-  dist_coords = suppressMessages(geodist::geodist(x = seq_mt_coords[, 3:4],
-                                                  y = mt_input_coords,
-                                                  paired = FALSE,
-                                                  sequential = FALSE,
-                                                  pad = TRUE,
-                                                  measure = distance_metric))
-
-  idx_min = which.min(dist_coords[, 1])[1]                        # keep the 1st. index in case that more than 1 coordinate pairs are close to the input (lat, lon) pair
-  return(list(coords_row = seq_mt_coords[idx_min, ],
-              dist_meters = dist_coords[idx_min, 1]))
-}
+# #........................................................................................ No longer required after the adjustment in the 'rayshader_3d_DEM()' function to accept 'long', 'lat' rather than 'x', 'y'
+# #' Find the image (x,y)-coordinates using meshgrids of (lat,lon)-coordinates
+# #'
+# #' @param longitude a numeric value specifying the longitude
+# #' @param latitude a numeric value specifying the latitude
+# #' @param buffer_raster an object of class raster
+# #' @param buffer_bbox a numeric vector specifying the bounding box
+# #' @param distance_metric a character string specifying the distance metric, one of "haversine" "vincenty", "geodesic" or "cheap" (see the 'geodist::geodist()' function of the 'geodist' package)
+# #' @param digits an integer value specifying the number of digits
+# #' @return an object of class list
+# #'
+# #' @keywords internal
+# #'
+# #' @import OpenImageR
+# #' @importFrom data.table setDT
+# #' @importFrom geodist geodist
+# #' @importFrom utils getFromNamespace
+# #'
+# #' @details
+# #'
+# #' I've used this workaround to label the rayshader 3d-plot because the 'lat', 'lon' parameters did not work properly
+#
+# meshgrids_XY_LatLon = function(longitude,
+#                                latitude,
+#                                buffer_raster,
+#                                buffer_bbox,
+#                                distance_metric = "vincenty",
+#                                digits = 8) {
+#
+#   #.............................  reset the options on.exit()
+#   init_options <- options()
+#   on.exit(options(init_options))
+#   #.............................
+#
+#   options(digits = digits)
+#
+#   DIMS = dim(buffer_raster)[1:2]
+#
+#   meshgrid_x_openim = utils::getFromNamespace(x = "meshgrid_x", ns = "OpenImageR")
+#   meshgrid_y_openim = utils::getFromNamespace(x = "meshgrid_y", ns = "OpenImageR")
+#
+#   x = meshgrid_x_openim(rows = DIMS[1], cols = DIMS[2]) + 1
+#   y = meshgrid_y_openim(rows = DIMS[1], cols = DIMS[2]) + 1
+#
+#   # grid_lat_lon = HiClimR::grid2D(lon = c(buffer_bbox['xmin'], buffer_bbox['xmax']),
+#   #                                lat = c(buffer_bbox['ymin'], buffer_bbox['ymax']))               # it is not required, keep it as a reference
+#
+#   lon_seq = seq(from = buffer_bbox['xmin'], to = buffer_bbox['xmax'], length.out = DIMS[2])         # computation of longitudes column-wise (you can verify the direction on the web browser consulting a map)
+#   lon_seq = lapply(1:DIMS[1], function(x) {
+#     lon_seq
+#   })
+#   lon_seq = do.call(rbind, lon_seq)
+#
+#   lat_seq = seq(from = buffer_bbox['ymin'], to = buffer_bbox['ymax'], length.out = DIMS[1])         # computation of latitudes row-wise (you can verify the direction on the web browser consulting a map)
+#   lat_seq = lapply(1:DIMS[2], function(x) {
+#     lat_seq
+#   })
+#   lat_seq = do.call(cbind, lat_seq)
+#
+#   seq_mt_coords = data.table::setDT(list(x = as.vector(x),
+#                                          y = as.vector(y),
+#                                          longitude = as.vector(lon_seq),
+#                                          latitude = as.vector(lat_seq)))
+#
+#   mt_input_coords = matrix(c(longitude, latitude), nrow = 1, ncol = 2)
+#
+#   dist_coords = suppressMessages(geodist::geodist(x = seq_mt_coords[, 3:4],
+#                                                   y = mt_input_coords,
+#                                                   paired = FALSE,
+#                                                   sequential = FALSE,
+#                                                   pad = TRUE,
+#                                                   measure = distance_metric))
+#
+#   idx_min = which.min(dist_coords[, 1])[1]                        # keep the 1st. index in case that more than 1 coordinate pairs are close to the input (lat, lon) pair
+#   return(list(coords_row = seq_mt_coords[idx_min, ],
+#               dist_meters = dist_coords[idx_min, 1]))
+# }
+# #........................................................................................
 
 
 
@@ -1522,7 +1545,6 @@ meshgrids_XY_LatLon = function(longitude,
 #'
 #' @param rst_buf this parameter corresponds to the 'sfc_obj' object of the 'extend_AOI_buffer()' function
 #' @param rst_ext this parameter corresponds to the 'raster_obj_extent' object of the 'extend_AOI_buffer()' function
-#' @param rst_bbx this parameter corresponds to the 'buffer_bbox' object of the 'extend_AOI_buffer()' function
 #' @param linestring_ASC_DESC If NULL then this parameter will be ignored. Otherwise, it can be an 'sf' object or a named list of length 2 (that corresponds to the output of the 'gps_lat_lon_to_LINESTRING()' function)
 #' @param elevation_sample_points if NULL then this parameter will be ignored. Otherwise, it corresponds to a data.table with column names 'latitude', 'longitude' and 'AltitudeMeters'. For instance, it can consist of 3 or 4 rows that will be displayed as vertical lines in the 3-dimensionsal map to visualize sample locations of the route (the latitudes and longitudes must exist in the output data.table of the 'GPS_TCX_data()' function)
 #' @param zoom a float number. Lower values increase the 3-dimensional DEM output. The default value is 0.5
@@ -1539,6 +1561,7 @@ meshgrids_XY_LatLon = function(longitude,
 #'
 #' @importFrom sf st_bbox
 #' @importFrom glue glue
+#' @importFrom raster extent
 #' @importFrom rayshader raster_to_matrix sphere_shade add_water add_shadow detect_water ray_shade add_overlay generate_line_overlay plot_3d render_label
 #'
 #' @examples
@@ -1626,11 +1649,9 @@ meshgrids_XY_LatLon = function(longitude,
 #'
 #' raysh_rst = crop_DEM(tif_or_vrt_dem_file = file_out,
 #'                      sf_buffer_obj = sf_rst_ext$sfc_obj,
-#'                      CRS = 4326,
-#'                      digits = 6,
 #'                      verbose = TRUE)
 #'
-#' # sp::plot(raysh_rst)
+#' # terra::plot(raysh_rst)
 #'
 #'
 #' #................................................................
@@ -1654,15 +1675,24 @@ meshgrids_XY_LatLon = function(longitude,
 #'                                            CRS = 4326,
 #'                                            time_split_asc_desc = NULL,
 #'                                            verbose = TRUE)
+#'
+#' #.....................................................
+#' # Conversion of the 'SpatRaster' to a raster object
+#' # because the 'rayshader' package accepts only rasters
+#' #.....................................................
+#'
+#' rst_obj = raster::raster(raysh_rst)
+#' raster::projection(rst_obj) <- terra::crs(raysh_rst, proj = TRUE)
+#'
+#'
 #' #.....................................
 #' # open the 3-dimensional rayshader map
 #' #.....................................
 #'
-#' ray_out = rayshader_3d_DEM(rst_buf = raysh_rst,
+#' ray_out = rayshader_3d_DEM(rst_buf = rst_obj,
 #'                            rst_ext = sf_rst_ext$raster_obj_extent,
-#'                            rst_bbx = sf_rst_ext$buffer_bbox,
 #'                            linestring_ASC_DESC = linestring_dat,
-#'                            # elevation_sample_points = dat_3m,
+#'                            elevation_sample_points = dat_3m,
 #'                            zoom = 0.5,
 #'                            windowsize = c(1600, 1000),
 #'                            add_shadow_rescale_original = FALSE,
@@ -1672,9 +1702,8 @@ meshgrids_XY_LatLon = function(longitude,
 
 rayshader_3d_DEM = function(rst_buf,
                             rst_ext,
-                            rst_bbx,
                             linestring_ASC_DESC = NULL,
-                            elevation_sample_points = NULL,         # it works but it's possible that the a few vertical lines are not displayed in the right position
+                            elevation_sample_points = NULL,
                             zoom = 0.5,
                             windowsize = c(1600, 1000),
                             add_shadow_rescale_original = FALSE,
@@ -1737,22 +1766,27 @@ rayshader_3d_DEM = function(rst_buf,
 
     for (ROW in 1:nrow(elevation_sample_points)) {
 
-      label = meshgrids_XY_LatLon(longitude = elevation_sample_points$longitude[ROW],
-                                  latitude = elevation_sample_points$latitude[ROW],
-                                  buffer_raster = rst_buf,
-                                  buffer_bbox = rst_bbx,
-                                  distance_metric = "vincenty",
-                                  digits = 8)
+      # #................................................................................. previous parameters, however 'long', 'lat' and 'altitude' by including the 'extent' works too [ see: https://github.com/tylermorganwall/rayshader/issues/30#issuecomment-640098901 ]
+      # label = meshgrids_XY_LatLon(longitude = elevation_sample_points$longitude[ROW],
+      #                             latitude = elevation_sample_points$latitude[ROW],
+      #                             buffer_raster = rst_buf,
+      #                             buffer_bbox = rst_bbx,
+      #                             distance_metric = "vincenty",
+      #                             digits = 8)
+      # #.................................................................................
 
       rayshader::render_label(heightmap = elevation_aoi,
-                              # long = elevation_sample_points$longitude[ROW],
-                              # lat = elevation_sample_points$latitude[ROW],          # using 'lat', 'long' does not return any label data
-                              x = label$coords_row$x,
-                              y = label$coords_row$y,
-                              z = as.integer(elevation_sample_points$AltitudeMeters[ROW]),
-                              # z = max_elev_area + (increment_elev_to_distinguish_locations * ROW),
-                              # zscale = 50,
+                              long = elevation_sample_points$longitude[ROW],
+                              lat = elevation_sample_points$latitude[ROW],
+                              altitude = as.integer(elevation_sample_points$AltitudeMeters[ROW]),
+                              extent = raster::extent(rst_buf),
                               zscale = 15,
+                              #................................. previous parameters, however 'long', 'lat' and 'altitude' by including the 'extent' works too [ see: https://github.com/tylermorganwall/rayshader/issues/30#issuecomment-640098901 ]
+                              # x = label$coords_row$x,
+                              # y = label$coords_row$y,
+                              # z = as.integer(elevation_sample_points$AltitudeMeters[ROW]),
+                              # zscale = 50,
+                              #.................................
                               text = as.character(glue::glue("Elevation: {round(elevation_sample_points$AltitudeMeters[ROW], 2)}")),
                               textcolor = "darkred",
                               linecolor = "darkred",

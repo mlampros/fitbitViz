@@ -4,27 +4,17 @@
 \alias{crop_DEM}
 \title{Function to crop the AOI from the downloaded DEM .tif file}
 \usage{
-crop_DEM(
-  tif_or_vrt_dem_file,
-  sf_buffer_obj,
-  CRS = 4326,
-  digits = 6,
-  verbose = FALSE
-)
+crop_DEM(tif_or_vrt_dem_file, sf_buffer_obj, verbose = FALSE)
 }
 \arguments{
 \item{tif_or_vrt_dem_file}{a valid path to the elevation .tif or .vrt file}
 
 \item{sf_buffer_obj}{a simple features ('sf') object that will be used to crop the input elevation raster file ('tif_or_vrt_dem_file' parameter)}
 
-\item{CRS}{an integer specifying the Coordinates Reference System. The recommended value for this data is 4326 (which is also the default value)}
-
-\item{digits}{the number of digits to use. It defaults to 6}
-
 \item{verbose}{a boolean. If TRUE then information will be printed out in the console}
 }
 \value{
-an object of class raster
+an object of class SpatRaster
 }
 \description{
 Function to crop the AOI from the downloaded DEM .tif file
@@ -114,11 +104,9 @@ if (length(TIF) == 1) {
 
 raysh_rst = crop_DEM(tif_or_vrt_dem_file = file_out,
                      sf_buffer_obj = sf_rst_ext$sfc_obj,
-                     CRS = 4326,
-                     digits = 6,
                      verbose = TRUE)
 
-sp::plot(raysh_rst)
+terra::plot(raysh_rst)
 
 }
 }

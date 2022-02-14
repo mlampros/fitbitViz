@@ -93,30 +93,32 @@ testthat::test_that("the function 'gps_lat_lon_to_LINESTRING' returns multiple o
 })
 
 
-testthat::test_that("the function 'gps_lat_lon_to_LINESTRING' returns multiple objects", {
-
-  idx_3m = c(which.min(dat_tcx$AltitudeMeters),
-             as.integer(length(dat_tcx$AltitudeMeters) / 2),
-             which.max(dat_tcx$AltitudeMeters))
-
-  cols_3m = c('latitude', 'longitude', 'AltitudeMeters')
-  dat_3m = dat_tcx[idx_3m, ..cols_3m]
-
-  sf_rst_ext = fitbitViz::extend_AOI_buffer(dat_gps_tcx = dat_tcx,
-                                            buffer_in_meters = 1000,
-                                            CRS = 4326,
-                                            verbose = FALSE)
-
-  res_grid = lapply(1:nrow(dat_3m), function(idx) {
-
-    suppressMessages(fitbitViz:::meshgrids_XY_LatLon(longitude = dat_3m$longitude[idx],
-                                                     latitude = dat_3m$latitude[idx],
-                                                     buffer_raster = dat_rst,
-                                                     buffer_bbox = sf_rst_ext$buffer_bbox,
-                                                     distance_metric = "vincenty",
-                                                     digits = 8))
-  })
-
-  testthat::expect_true( inherits(res_grid, "list") & all(unlist(lapply(res_grid, function(x) all(names(x) %in% c('coords_row', 'dist_meters'))))))
-})
+#................................................................................................. comment this test out because the 'meshgrids_XY_LatLon()' function is no longer used
+# testthat::test_that("the function 'gps_lat_lon_to_LINESTRING' returns multiple objects", {
+#
+#   idx_3m = c(which.min(dat_tcx$AltitudeMeters),
+#              as.integer(length(dat_tcx$AltitudeMeters) / 2),
+#              which.max(dat_tcx$AltitudeMeters))
+#
+#   cols_3m = c('latitude', 'longitude', 'AltitudeMeters')
+#   dat_3m = dat_tcx[idx_3m, ..cols_3m]
+#
+#   sf_rst_ext = fitbitViz::extend_AOI_buffer(dat_gps_tcx = dat_tcx,
+#                                             buffer_in_meters = 1000,
+#                                             CRS = 4326,
+#                                             verbose = FALSE)
+#
+#   res_grid = lapply(1:nrow(dat_3m), function(idx) {
+#
+#     suppressMessages(fitbitViz:::meshgrids_XY_LatLon(longitude = dat_3m$longitude[idx],
+#                                                      latitude = dat_3m$latitude[idx],
+#                                                      buffer_raster = dat_rst,
+#                                                      buffer_bbox = sf_rst_ext$buffer_bbox,
+#                                                      distance_metric = "vincenty",
+#                                                      digits = 8))
+#   })
+#
+#   testthat::expect_true( inherits(res_grid, "list") & all(unlist(lapply(res_grid, function(x) all(names(x) %in% c('coords_row', 'dist_meters'))))))
+# })
+#.................................................................................................
 
