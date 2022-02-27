@@ -2,6 +2,7 @@
 ## fitbitViz 1.0.4
 
 * I've added the *'fitbitViz.R'* file to include the *'utils::globalVariables()'* dependency
+* I've modified the code of the *'sleep_single_day()'* and *'sleep_time_series()'* functions to account for an error case
 
 
 ## fitbitViz 1.0.3

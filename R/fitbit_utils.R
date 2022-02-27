@@ -525,101 +525,112 @@ sleep_single_day = function(user_id,
   URL = glue::glue('https://api.fitbit.com/1.2/user/{user_id}/sleep/date/{date}/{date}.json')
   auth_code = paste("Bearer", token)
   query_response = httr::GET(url = URL, httr::add_headers(Authorization = auth_code))
-  if (query_response$status_code != 200) {                                              # in case of an error use "httr::content()" to get more details
-    content_list_obj = httr::content(query_response, "parsed")
-    stop(glue::glue("The request gave an error code of '{query_response$status_code}' with the following first '{show_nchar_case_error}' characters as error message: '{substr(content_list_obj, 1, show_nchar_case_error)}'"), call. = F)
-  }
 
   if (verbose) cat("The sleep content will be red ...\n")
   content_list_obj = httr::content(query_response, "parsed")
-  sleep = content_list_obj$sleep[[1]]$levels$data
-  sleep = lapply(sleep, unlist)
-  sleep = data.frame(do.call(rbind, sleep), stringsAsFactors = F)
-  sleep$dateTime = lubridate::ymd_hms(sleep$dateTime)
-  sleep$seconds = as.numeric(sleep$seconds)
 
-  if (verbose) cat("The sleep-time will be transformed ...\n")
-  lst_dtbl = list()
-
-  for (ROW in 1:nrow(sleep)) {
-
-    iter_row = sleep[ROW, , drop = F]
-    iter_row_begin = iter_row$dateTime + lubridate::seconds(iter_row$seconds)                # Initially I subtracted 1 second in this line so that it can serve as the end of the duration BUT then the levels are not connected
-    iter_row_end = iter_row$dateTime + lubridate::seconds(iter_row$seconds)
-
-    iter_dat = data.table::setDT(list(dateTime_start = iter_row$dateTime,
-                                      level_start = iter_row$level,
-                                      dateTime_end = iter_row_begin,
-                                      level_end = iter_row$level,
-                                      seconds = lubridate::seconds(iter_row$seconds)))
-    lst_dtbl[[ROW]] = iter_dat
+  if (query_response$status_code != 200) {                                              # in case of an error use "httr::content()" to get more details
+    stop(glue::glue("The request gave an error code of '{query_response$status_code}' with the following first '{show_nchar_case_error}' characters as error message: '{substr(content_list_obj, 1, show_nchar_case_error)}'"), call. = F)
   }
 
-  lst_dtbl = data.table::rbindlist(lst_dtbl)
+  if (length(content_list_obj$sleep) == 0) {
 
-  if (verbose) cat("Groups for the sleep-time will be created ...\n")
-  lst_dtbl_group = list()
-
-  for (ROW in 1:(nrow(sleep)-1)) {
-
-    iter_row = sleep[ROW, , drop = F]
-    iter_row$dateTime_end = iter_row$dateTime + lubridate::seconds(iter_row$seconds)
-    iter_row$level_end = iter_row$level
-    COLNAMS = colnames(iter_row)
-
-    iter_row_next = sleep[ROW + 1, , drop = F]
-    iter_row_next$dateTime_end = iter_row_next$dateTime + lubridate::seconds(iter_row_next$seconds)
-    iter_row_next$level_end = iter_row_next$level
-    colnames(iter_row_next) = c("dateTime_end", "level", "seconds", "dateTime", "level_end")
-    iter_row_next = iter_row_next[, COLNAMS]
-
-    iter_row$seconds = NULL
-    iter_row$GROUP = as.character(ROW)
-
-    iter_row_next$seconds = NULL
-    iter_row_next$GROUP = as.character(ROW)
-
-    dat_iter = data.table::rbindlist(list(iter_row, iter_row_next))
-    colnames(dat_iter) = c('dateTime_start', 'level_start', 'dateTime_end', 'level_end', 'GROUP')
-
-    lst_dtbl_group[[ROW]] = dat_iter
+    lst_dat = list(init_data = NULL,
+                   grouped_data = NULL,
+                   level_accum = NULL,
+                   plt = NULL)
   }
+  else {
 
-  lst_dtbl_group = data.table::rbindlist(lst_dtbl_group)
+    sleep = content_list_obj$sleep[[1]]$levels$data
+    sleep = lapply(sleep, unlist)
+    sleep = data.frame(do.call(rbind, sleep), stringsAsFactors = F)
+    sleep$dateTime = lubridate::ymd_hms(sleep$dateTime)
+    sleep$seconds = as.numeric(sleep$seconds)
 
-  if (verbose) cat(glue::glue("The 'ggplot' for day '{date}' will be created ..."), '\n')
+    if (verbose) cat("The sleep-time will be transformed ...\n")
+    lst_dtbl = list()
 
-  plt = ggplot2::ggplot(lst_dtbl, ggplot2::aes(x = dateTime_end,
-                                               y = level_end,
-                                               xend = dateTime_start,
-                                               yend = level_start,
-                                               group = level_start,
-                                               colour = level_start)) +
-    ggplot2::geom_segment(size = 2, ggplot2::aes(colour = level_end)) +
-    ggplot2::geom_line(data = lst_dtbl_group, ggplot2::aes(group = GROUP), size = 2) +
-    paletteer::scale_color_paletteer_d(ggplot_color_palette, direction = -1) +
-    ggplot2::ggtitle(glue::glue("Sleep value at {date} ( '{as.character(lubridate::wday(date, label = TRUE))}' )")) +
-    ggplot2::scale_x_datetime(date_breaks = "30 min", date_labels = "%H:%M") +
-    ggplot2::ylab(glue::glue("Sleep Level")) +
-    ggplot2::xlab("Time") +
-    ggplot2::labs(color='Sleep Level') +
-    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, face = "bold", colour = "dark green"),
-                   axis.title.x = ggplot2::element_text(size = 10, face = "bold", colour = "dark green"),
-                   axis.title.y = ggplot2::element_text(size = 10, face = "bold", colour = "dark green"),
-                   axis.text.x = ggplot2::element_text(size = 10, face = "bold", colour = "black", angle = 30, vjust = 1.0, hjust = 1.0),
-                   axis.text.y = ggplot2::element_text(size = 10, face = "bold", colour = "black"))
+    for (ROW in 1:nrow(sleep)) {
 
-  cols_accum = c('level_start', 'seconds')
-  level_accum = lst_dtbl[, ..cols_accum]
-  level_accum = level_accum[, lapply(.SD, sum), by = 'level_start']
-  level_accum$percent = round((level_accum$seconds / sum(level_accum$seconds)) * 100.0, 2)
-  level_accum$Date = as.Date(rep(date, nrow(level_accum)))
-  level_accum$weekday = lubridate::wday(level_accum$Date, label = T, abbr = T)
+      iter_row = sleep[ROW, , drop = F]
+      iter_row_begin = iter_row$dateTime + lubridate::seconds(iter_row$seconds)                # Initially I subtracted 1 second in this line so that it can serve as the end of the duration BUT then the levels are not connected
+      iter_row_end = iter_row$dateTime + lubridate::seconds(iter_row$seconds)
 
-  lst_dat = list(init_data = lst_dtbl,
-                 grouped_data = lst_dtbl_group,
-                 level_accum = level_accum,
-                 plt = plt)
+      iter_dat = data.table::setDT(list(dateTime_start = iter_row$dateTime,
+                                        level_start = iter_row$level,
+                                        dateTime_end = iter_row_begin,
+                                        level_end = iter_row$level,
+                                        seconds = lubridate::seconds(iter_row$seconds)))
+      lst_dtbl[[ROW]] = iter_dat
+    }
+
+    lst_dtbl = data.table::rbindlist(lst_dtbl)
+
+    if (verbose) cat("Groups for the sleep-time will be created ...\n")
+    lst_dtbl_group = list()
+
+    for (ROW in 1:(nrow(sleep)-1)) {
+
+      iter_row = sleep[ROW, , drop = F]
+      iter_row$dateTime_end = iter_row$dateTime + lubridate::seconds(iter_row$seconds)
+      iter_row$level_end = iter_row$level
+      COLNAMS = colnames(iter_row)
+
+      iter_row_next = sleep[ROW + 1, , drop = F]
+      iter_row_next$dateTime_end = iter_row_next$dateTime + lubridate::seconds(iter_row_next$seconds)
+      iter_row_next$level_end = iter_row_next$level
+      colnames(iter_row_next) = c("dateTime_end", "level", "seconds", "dateTime", "level_end")
+      iter_row_next = iter_row_next[, COLNAMS]
+
+      iter_row$seconds = NULL
+      iter_row$GROUP = as.character(ROW)
+
+      iter_row_next$seconds = NULL
+      iter_row_next$GROUP = as.character(ROW)
+
+      dat_iter = data.table::rbindlist(list(iter_row, iter_row_next))
+      colnames(dat_iter) = c('dateTime_start', 'level_start', 'dateTime_end', 'level_end', 'GROUP')
+
+      lst_dtbl_group[[ROW]] = dat_iter
+    }
+
+    lst_dtbl_group = data.table::rbindlist(lst_dtbl_group)
+
+    if (verbose) cat(glue::glue("The 'ggplot' for day '{date}' will be created ..."), '\n')
+
+    plt = ggplot2::ggplot(lst_dtbl, ggplot2::aes(x = dateTime_end,
+                                                 y = level_end,
+                                                 xend = dateTime_start,
+                                                 yend = level_start,
+                                                 group = level_start,
+                                                 colour = level_start)) +
+      ggplot2::geom_segment(size = 2, ggplot2::aes(colour = level_end)) +
+      ggplot2::geom_line(data = lst_dtbl_group, ggplot2::aes(group = GROUP), size = 2) +
+      paletteer::scale_color_paletteer_d(ggplot_color_palette, direction = -1) +
+      ggplot2::ggtitle(glue::glue("Sleep value at {date} ( '{as.character(lubridate::wday(date, label = TRUE))}' )")) +
+      ggplot2::scale_x_datetime(date_breaks = "30 min", date_labels = "%H:%M") +
+      ggplot2::ylab(glue::glue("Sleep Level")) +
+      ggplot2::xlab("Time") +
+      ggplot2::labs(color='Sleep Level') +
+      ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, face = "bold", colour = "dark green"),
+                     axis.title.x = ggplot2::element_text(size = 10, face = "bold", colour = "dark green"),
+                     axis.title.y = ggplot2::element_text(size = 10, face = "bold", colour = "dark green"),
+                     axis.text.x = ggplot2::element_text(size = 10, face = "bold", colour = "black", angle = 30, vjust = 1.0, hjust = 1.0),
+                     axis.text.y = ggplot2::element_text(size = 10, face = "bold", colour = "black"))
+
+    cols_accum = c('level_start', 'seconds')
+    level_accum = lst_dtbl[, ..cols_accum]
+    level_accum = level_accum[, lapply(.SD, sum), by = 'level_start']
+    level_accum$percent = round((level_accum$seconds / sum(level_accum$seconds)) * 100.0, 2)
+    level_accum$Date = as.Date(rep(date, nrow(level_accum)))
+    level_accum$weekday = lubridate::wday(level_accum$Date, label = T, abbr = T)
+
+    lst_dat = list(init_data = lst_dtbl,
+                   grouped_data = lst_dtbl_group,
+                   level_accum = level_accum,
+                   plt = plt)
+  }
 
   if (verbose) compute_elapsed_time(t_start)
 
@@ -762,6 +773,10 @@ sleep_time_series  = function(user_id,
     level_accum_lst[[idx]] = sleep_ggplt$level_accum
   }
 
+  idx_not_null = as.vector(unlist(lapply(level_accum_lst, function(x) !is.null(x))))
+  level_accum_lst = level_accum_lst[idx_not_null]
+  if (length(level_accum_lst) == 0) stop("It seems that after removing the NULL sublists there are no remaining data available!", call. = F)
+
   if (verbose) cat("The sleep data heatmap will be added ...\n")
   level_accum_lst = data.table::rbindlist(level_accum_lst)
 
@@ -775,7 +790,7 @@ sleep_time_series  = function(user_id,
   heat_map = sleep_heatmap(level_data = level_accum_lst, angle_x_axis = 0)
 
   if (verbose) cat("Wrap all plots into a single one multiplot ...\n")
-  plt_all = patchwork::wrap_plots(sleep_intraday_plt,
+  plt_all = patchwork::wrap_plots(sleep_intraday_plt[idx_not_null],         # !! remove potential NULL sublists
                                   ncol = ggplot_ncol,
                                   nrow = ggplot_nrow) # / heat_map          # although this is feasible it somehow shrinks the maps, therefore return the 'intraday' plots and the 'heatmap' separately
 
