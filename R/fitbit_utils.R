@@ -551,9 +551,9 @@ sleep_single_day = function(user_id,
     if (verbose) cat("The sleep-time will be transformed ...\n")
     lst_dtbl = list()
 
-    for (ROW in 1:nrow(sleep)) {
+    for (ROW_outer in 1:nrow(sleep)) {
 
-      iter_row = sleep[ROW, , drop = F]
+      iter_row = sleep[ROW_outer, , drop = F]
       iter_row_begin = iter_row$dateTime + lubridate::seconds(iter_row$seconds)                # Initially I subtracted 1 second in this line so that it can serve as the end of the duration BUT then the levels are not connected
       iter_row_end = iter_row$dateTime + lubridate::seconds(iter_row$seconds)
 
@@ -562,7 +562,7 @@ sleep_single_day = function(user_id,
                                         dateTime_end = iter_row_begin,
                                         level_end = iter_row$level,
                                         seconds = lubridate::seconds(iter_row$seconds)))
-      lst_dtbl[[ROW]] = iter_dat
+      lst_dtbl[[ROW_outer]] = iter_dat
     }
 
     lst_dtbl = data.table::rbindlist(lst_dtbl)
