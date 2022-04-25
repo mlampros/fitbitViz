@@ -120,8 +120,7 @@
 <p>From the first moment I’ve started implementing the <strong>fitbitViz</strong> R package this is what I actually had in my mind. You can have a look to <a href="https://mlampros.github.io/fitbitVizBlog/" class="external-link">my Fitbit Visualizations website</a>. The following steps explain in detail how this can be achieved:</p>
 <ul>
 <li>Fork the <a href="https://github.com/mlampros/fitbitVizBlog" class="external-link">fitbitVizBlog</a> repository ( <strong>!!! Not this repository but the one that includes the blog posts !!!</strong> )</li>
-<li>Create the following <strong>secrets</strong> required for the <a href="https://github.com/mlampros/fitbitVizBlog/blob/master/.github/workflows/gh_fitbit_blog.yaml" class="external-link">.github/workflows/gh_fitbit_blog.yaml</a> file by navigating to <strong>Settings</strong> &gt;&gt; <strong>secrets</strong> (<em>be aware that the <strong>AWS_ACCESS_KEY_ID</strong> and <strong>AWS_SECRET_ACCESS_KEY</strong> are optional and required only if you want to receive the <strong>3-dimensional</strong> Rayshader Visualization</em>)
-<ul>
+<li>Create the following <strong>secrets</strong> required for the <a href="https://github.com/mlampros/fitbitVizBlog/blob/master/.github/workflows/gh_fitbit_blog.yaml" class="external-link">.github/workflows/gh_fitbit_blog.yaml</a> file by navigating to <strong>Settings</strong> &gt;&gt; <strong>secrets</strong> (<em>be aware that the <strong>AWS_ACCESS_KEY_ID</strong> and <strong>AWS_SECRET_ACCESS_KEY</strong> are optional and required only if you want to receive the <strong>3-dimensional</strong> Rayshader Visualization</em>)<ul>
 <li>
 <strong>USER_ID</strong>: click on ‘New repository secret’ and use <strong>USER_ID</strong> as <strong>Name</strong> and your Fitbit <a href="https://community.fitbit.com/t5/Web-API-Development/Where-do-I-find-my-User-ID/m-p/1138667/highlight/true#M4375" class="external-link">user-id</a> as <strong>Value</strong>
 </li>
@@ -143,15 +142,9 @@
 </ul>
 <p>What it remains is to modify the <a href="https://github.com/mlampros/fitbitVizBlog/blob/master/.github/workflows/gh_fitbit_blog.yaml" class="external-link">.github/workflows/gh_fitbit_blog.yaml</a> file to adjust the</p>
 <ul>
-<li>current <strong>cron-job</strong> settings which runs every Sunday at 23:00 pm
-<ul>
-<li><img src="./reference/figures/cron_job_setup.png"></li>
-</ul>
+<li>current <strong>cron-job</strong> settings which runs every Sunday at 23:00 pm<ul><li><img src="./reference/figures/cron_job_setup.png"></li></ul>
 </li>
-<li>current <strong>fitbitViz</strong> parameters
-<ul>
-<li><img src="./reference/figures/fitbit_parameters.png"></li>
-</ul>
+<li>current <strong>fitbitViz</strong> parameters<ul><li><img src="./reference/figures/fitbit_parameters.png"></li></ul>
 </li>
 </ul>
 <p>Regarding the <strong>fitbitViz</strong> parameters (<a href="https://github.com/mlampros/fitbitVizBlog/blob/master/.github/workflows/gh_fitbit_blog.yaml" class="external-link">.github/workflows/gh_fitbit_blog.yaml</a> file) at it’s current state the application takes:</p>
@@ -165,8 +158,7 @@
 <li>
 <strong>sleep_time_ends</strong>: this is your scheduled wake up time in form of a <strong>lubridate::hms(“08H 00M 0S”)</strong> object (adjust the input depending on your wake up time)</li>
 <li>
-<strong>asc_desc_linestring</strong>: this parameter is related to the GPS data of the <strong>3-dimensional</strong> map especially if you keep track of your outdoor activities. There are <strong>3 options</strong> but before making use of the <strong>2nd. option make sure</strong> that there is an ascending and descending route, otherwise it will give an error:
-<ol style="list-style-type: decimal">
+<strong>asc_desc_linestring</strong>: this parameter is related to the GPS data of the <strong>3-dimensional</strong> map especially if you keep track of your outdoor activities. There are <strong>3 options</strong> but before making use of the <strong>2nd. option make sure</strong> that there is an ascending and descending route, otherwise it will give an error:<ol style="list-style-type: decimal">
 <li>by specifying <strong>asc_desc_linestring="";</strong> a single LINESTRING will be created based on the GPS data using a single color</li>
 <li>by specifying <strong>asc_desc_linestring=“TRUE”;</strong> the LINESTRING of the GPS data will be split into 2 parts using the highest elevation location as a split point (<strong>blue</strong> color for the ascending part and <strong>red</strong> color for the descending part)</li>
 <li>by specifying <strong>asc_desc_linestring=“17H 5M 0S”;</strong> the GPS data will be split into 2 parts using this input time as split point (adjust the time based on your data)</li>
@@ -193,18 +185,15 @@
 <p><br></p>
 <p><img src="./reference/figures/csv_button.png"></p>
 <p><br></p>
-<ul>
-<li>
-<strong>References</strong>:
-<ul>
+<ul><li>
+<strong>References</strong>:<ul>
 <li><a href="https://registry.opendata.aws/copernicus-dem/" class="external-link uri">https://registry.opendata.aws/copernicus-dem/</a></li>
 <li><a href="https://dev.fitbit.com/build/reference/web-api/" class="external-link uri">https://dev.fitbit.com/build/reference/web-api/</a></li>
 <li><a href="https://obrl-soil.github.io/fitbit-api-r/" class="external-link uri">https://obrl-soil.github.io/fitbit-api-r/</a></li>
 <li><a href="https://github.com/orchid00/actions_sandbox/issues/41#issuecomment-816970613" class="external-link uri">https://github.com/orchid00/actions_sandbox/issues/41#issuecomment-816970613</a></li>
 <li><a href="https://blog--simonpcouch.netlify.app/blog/r-github-actions-commit/" class="external-link uri">https://blog--simonpcouch.netlify.app/blog/r-github-actions-commit/</a></li>
 </ul>
-</li>
-</ul>
+</li></ul>
 <p><br></p>
 </div>
 <div class="section level3">
@@ -322,7 +311,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>
