@@ -63,28 +63,37 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">gps_lat_lon_to_LINESTRING</span><span class="op">(</span>
-  <span class="va">dat_gps_tcx</span>,
-  CRS <span class="op">=</span> <span class="fl">4326</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  time_split_asc_desc <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gps_lat_lon_to_LINESTRING</span><span class="op">(</span></span>
+<span>  <span class="va">dat_gps_tcx</span>,</span>
+<span>  CRS <span class="op">=</span> <span class="fl">4326</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  time_split_asc_desc <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dat_gps_tcx</dt>
 <dd><p>this parameter corresponds to the output data.table of the 'GPS_TCX_data()' function</p></dd>
+
+
 <dt>CRS</dt>
 <dd><p>an integer specifying the Coordinates Reference System. The recommended value for this data is 4326 (which is also the default value)</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>a boolean. If TRUE then information will be printed out in the console</p></dd>
+
+
 <dt>time_split_asc_desc</dt>
 <dd><p>if NULL then the maximum altitude coordinates point will be used as a split point of the route, otherwise the user can give a lubridate 'hours-minutes-seconds' object such as: lubridate::hms('17:05:00')</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>an object of class list</p>
+    
+
+<p>an object of class list</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -93,56 +102,56 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlampros/fitbitViz" class="external-link">fitbitViz</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#............................</span></span>
-<span class="r-in"><span class="co"># first extract the log-id(s)</span></span>
-<span class="r-in"><span class="co">#............................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">USER_ID</span> <span class="op">=</span> <span class="st">'99xxxx'</span></span>
-<span class="r-in"><span class="va">token</span> <span class="op">=</span> <span class="st">'my_long_web_api_token'</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">log_id</span> <span class="op">=</span> <span class="fu"><a href="extract_LOG_ID.html">extract_LOG_ID</a></span><span class="op">(</span>user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span>
-<span class="r-in">                        token <span class="op">=</span> <span class="va">token</span>,</span>
-<span class="r-in">                        after_Date <span class="op">=</span> <span class="st">'2021-03-13'</span>,</span>
-<span class="r-in">                        limit <span class="op">=</span> <span class="fl">10</span>,</span>
-<span class="r-in">                        sort <span class="op">=</span> <span class="st">'asc'</span>,</span>
-<span class="r-in">                        verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">log_id</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#...................................</span></span>
-<span class="r-in"><span class="co"># then return the gps-ctx data.table</span></span>
-<span class="r-in"><span class="co">#...................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">res_tcx</span> <span class="op">=</span> <span class="fu"><a href="GPS_TCX_data.html">GPS_TCX_data</a></span><span class="op">(</span>log_id <span class="op">=</span> <span class="va">log_id</span>,</span>
-<span class="r-in">                       user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span>
-<span class="r-in">                       token <span class="op">=</span> <span class="va">token</span>,</span>
-<span class="r-in">                       time_zone <span class="op">=</span> <span class="st">'Europe/Athens'</span>,</span>
-<span class="r-in">                       verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">res_tcx</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#..................................................................</span></span>
-<span class="r-in"><span class="co"># By using using the maximum altitude as a split point of the route</span></span>
-<span class="r-in"><span class="co">#..................................................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">linestring_dat_init</span> <span class="op">=</span> <span class="fu">gps_lat_lon_to_LINESTRING</span><span class="op">(</span>dat_gps_tcx <span class="op">=</span> <span class="va">res_tcx</span>,</span>
-<span class="r-in">                                                CRS <span class="op">=</span> <span class="fl">4326</span>,</span>
-<span class="r-in">                                                time_split_asc_desc <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span class="r-in">                                                verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#.................................................................</span></span>
-<span class="r-in"><span class="co"># By using a customized split of the route (ascending, descending)</span></span>
-<span class="r-in"><span class="co">#.................................................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">linestring_dat_lubr</span> <span class="op">=</span> <span class="fu">gps_lat_lon_to_LINESTRING</span><span class="op">(</span>dat_gps_tcx <span class="op">=</span> <span class="va">res_tcx</span>,</span>
-<span class="r-in">                                                CRS <span class="op">=</span> <span class="fl">4326</span>,</span>
-<span class="r-in">                                                time_split_asc_desc <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/hms.html" class="external-link">hms</a></span><span class="op">(</span><span class="st">'17:05:00'</span><span class="op">)</span>,</span>
-<span class="r-in">                                                verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlampros/fitbitViz" class="external-link">fitbitViz</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#............................</span></span></span>
+<span class="r-in"><span><span class="co"># first extract the log-id(s)</span></span></span>
+<span class="r-in"><span><span class="co">#............................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">USER_ID</span> <span class="op">=</span> <span class="st">'99xxxx'</span></span></span>
+<span class="r-in"><span><span class="va">token</span> <span class="op">=</span> <span class="st">'my_long_web_api_token'</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">log_id</span> <span class="op">=</span> <span class="fu"><a href="extract_LOG_ID.html">extract_LOG_ID</a></span><span class="op">(</span>user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span></span>
+<span class="r-in"><span>                        token <span class="op">=</span> <span class="va">token</span>,</span></span>
+<span class="r-in"><span>                        after_Date <span class="op">=</span> <span class="st">'2021-03-13'</span>,</span></span>
+<span class="r-in"><span>                        limit <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>                        sort <span class="op">=</span> <span class="st">'asc'</span>,</span></span>
+<span class="r-in"><span>                        verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">log_id</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#...................................</span></span></span>
+<span class="r-in"><span><span class="co"># then return the gps-ctx data.table</span></span></span>
+<span class="r-in"><span><span class="co">#...................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">res_tcx</span> <span class="op">=</span> <span class="fu"><a href="GPS_TCX_data.html">GPS_TCX_data</a></span><span class="op">(</span>log_id <span class="op">=</span> <span class="va">log_id</span>,</span></span>
+<span class="r-in"><span>                       user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span></span>
+<span class="r-in"><span>                       token <span class="op">=</span> <span class="va">token</span>,</span></span>
+<span class="r-in"><span>                       time_zone <span class="op">=</span> <span class="st">'Europe/Athens'</span>,</span></span>
+<span class="r-in"><span>                       verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">res_tcx</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#..................................................................</span></span></span>
+<span class="r-in"><span><span class="co"># By using using the maximum altitude as a split point of the route</span></span></span>
+<span class="r-in"><span><span class="co">#..................................................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">linestring_dat_init</span> <span class="op">=</span> <span class="fu">gps_lat_lon_to_LINESTRING</span><span class="op">(</span>dat_gps_tcx <span class="op">=</span> <span class="va">res_tcx</span>,</span></span>
+<span class="r-in"><span>                                                CRS <span class="op">=</span> <span class="fl">4326</span>,</span></span>
+<span class="r-in"><span>                                                time_split_asc_desc <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>                                                verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#.................................................................</span></span></span>
+<span class="r-in"><span><span class="co"># By using a customized split of the route (ascending, descending)</span></span></span>
+<span class="r-in"><span><span class="co">#.................................................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">linestring_dat_lubr</span> <span class="op">=</span> <span class="fu">gps_lat_lon_to_LINESTRING</span><span class="op">(</span>dat_gps_tcx <span class="op">=</span> <span class="va">res_tcx</span>,</span></span>
+<span class="r-in"><span>                                                CRS <span class="op">=</span> <span class="fl">4326</span>,</span></span>
+<span class="r-in"><span>                                                time_split_asc_desc <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/hms.html" class="external-link">hms</a></span><span class="op">(</span><span class="st">'17:05:00'</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                                                verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -157,7 +166,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

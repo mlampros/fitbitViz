@@ -63,31 +63,42 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">heart_rate_variability_sleep_time</span><span class="op">(</span>
-  <span class="va">heart_rate_data</span>,
-  sleep_begin <span class="op">=</span> <span class="st">"00H 40M 0S"</span>,
-  sleep_end <span class="op">=</span> <span class="st">"08H 00M 0S"</span>,
-  ggplot_hr_var <span class="op">=</span> <span class="cn">TRUE</span>,
-  angle_x_axis <span class="op">=</span> <span class="fl">45</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">heart_rate_variability_sleep_time</span><span class="op">(</span></span>
+<span>  <span class="va">heart_rate_data</span>,</span>
+<span>  sleep_begin <span class="op">=</span> <span class="st">"00H 40M 0S"</span>,</span>
+<span>  sleep_end <span class="op">=</span> <span class="st">"08H 00M 0S"</span>,</span>
+<span>  ggplot_hr_var <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  angle_x_axis <span class="op">=</span> <span class="fl">45</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>heart_rate_data</dt>
 <dd><p>a list object. This is the output of the 'heart_rate_time_series()' function</p></dd>
+
+
 <dt>sleep_begin</dt>
 <dd><p>a character string specifying the begin of the sleep time. For instance, the time "00H 40M 0S" where the input order is 'hours-minutes-seconds' and the format corresponds to the 'lubridate::hms()' function</p></dd>
+
+
 <dt>sleep_end</dt>
 <dd><p>a character string specifying the end of the sleep time. For instance, the time "08H 00M 0S" where the input order is 'hours-minutes-seconds' and the format corresponds to the 'lubridate::hms()' function</p></dd>
+
+
 <dt>ggplot_hr_var</dt>
 <dd><p>a boolean. If TRUE then the ggplot of the heart rate variability will be returned</p></dd>
+
+
 <dt>angle_x_axis</dt>
 <dd><p>an integer specifying the angle of the x-axis labels. The default values is 45 (it can take for instance values such as 0, 90 etc.)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>an object of class list</p>
+    
+
+<p>an object of class list</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -98,42 +109,42 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlampros/fitbitViz" class="external-link">fitbitViz</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#...........................................</span></span>
-<span class="r-in"><span class="co"># first compute the heart rate intraday data</span></span>
-<span class="r-in"><span class="co">#...........................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">USER_ID</span> <span class="op">=</span> <span class="st">'99xxxx'</span></span>
-<span class="r-in"><span class="va">token</span> <span class="op">=</span> <span class="st">'my_long_web_api_token'</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">heart_dat</span> <span class="op">=</span> <span class="fu"><a href="heart_rate_time_series.html">heart_rate_time_series</a></span><span class="op">(</span>user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span>
-<span class="r-in">                                   token <span class="op">=</span> <span class="va">token</span>,</span>
-<span class="r-in">                                   date_start <span class="op">=</span> <span class="st">'2021-03-09'</span>,</span>
-<span class="r-in">                                   date_end <span class="op">=</span> <span class="st">'2021-03-16'</span>,</span>
-<span class="r-in">                                   time_start <span class="op">=</span> <span class="st">'00:00'</span>,</span>
-<span class="r-in">                                   time_end <span class="op">=</span> <span class="st">'23:59'</span>,</span>
-<span class="r-in">                                   detail_level <span class="op">=</span> <span class="st">'1min'</span>,</span>
-<span class="r-in">                                   ggplot_intraday <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">                                   verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">                                   show_nchar_case_error <span class="op">=</span> <span class="fl">135</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#.......................</span></span>
-<span class="r-in"><span class="co"># heart rate variability</span></span>
-<span class="r-in"><span class="co">#.......................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">hrt_rt_var</span> <span class="op">=</span> <span class="fu">heart_rate_variability_sleep_time</span><span class="op">(</span>heart_rate_data <span class="op">=</span> <span class="va">heart_dat</span>,</span>
-<span class="r-in">                                               sleep_begin <span class="op">=</span> <span class="st">"00H 40M 0S"</span>,</span>
-<span class="r-in">                                               sleep_end <span class="op">=</span> <span class="st">"08H 00M 0S"</span>,</span>
-<span class="r-in">                                               ggplot_hr_var <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">                                               angle_x_axis <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">hrt_rt_var</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlampros/fitbitViz" class="external-link">fitbitViz</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#...........................................</span></span></span>
+<span class="r-in"><span><span class="co"># first compute the heart rate intraday data</span></span></span>
+<span class="r-in"><span><span class="co">#...........................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">USER_ID</span> <span class="op">=</span> <span class="st">'99xxxx'</span></span></span>
+<span class="r-in"><span><span class="va">token</span> <span class="op">=</span> <span class="st">'my_long_web_api_token'</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">heart_dat</span> <span class="op">=</span> <span class="fu"><a href="heart_rate_time_series.html">heart_rate_time_series</a></span><span class="op">(</span>user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span></span>
+<span class="r-in"><span>                                   token <span class="op">=</span> <span class="va">token</span>,</span></span>
+<span class="r-in"><span>                                   date_start <span class="op">=</span> <span class="st">'2021-03-09'</span>,</span></span>
+<span class="r-in"><span>                                   date_end <span class="op">=</span> <span class="st">'2021-03-16'</span>,</span></span>
+<span class="r-in"><span>                                   time_start <span class="op">=</span> <span class="st">'00:00'</span>,</span></span>
+<span class="r-in"><span>                                   time_end <span class="op">=</span> <span class="st">'23:59'</span>,</span></span>
+<span class="r-in"><span>                                   detail_level <span class="op">=</span> <span class="st">'1min'</span>,</span></span>
+<span class="r-in"><span>                                   ggplot_intraday <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                                   verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                                   show_nchar_case_error <span class="op">=</span> <span class="fl">135</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#.......................</span></span></span>
+<span class="r-in"><span><span class="co"># heart rate variability</span></span></span>
+<span class="r-in"><span><span class="co">#.......................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">hrt_rt_var</span> <span class="op">=</span> <span class="fu">heart_rate_variability_sleep_time</span><span class="op">(</span>heart_rate_data <span class="op">=</span> <span class="va">heart_dat</span>,</span></span>
+<span class="r-in"><span>                                               sleep_begin <span class="op">=</span> <span class="st">"00H 40M 0S"</span>,</span></span>
+<span class="r-in"><span>                                               sleep_end <span class="op">=</span> <span class="st">"08H 00M 0S"</span>,</span></span>
+<span class="r-in"><span>                                               ggplot_hr_var <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                                               angle_x_axis <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">hrt_rt_var</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -148,7 +159,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

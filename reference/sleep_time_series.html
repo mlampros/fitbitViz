@@ -63,86 +63,105 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">sleep_time_series</span><span class="op">(</span>
-  <span class="va">user_id</span>,
-  <span class="va">token</span>,
-  <span class="va">date_start</span>,
-  <span class="va">date_end</span>,
-  ggplot_color_palette <span class="op">=</span> <span class="st">"ggsci::blue_material"</span>,
-  ggplot_ncol <span class="op">=</span> <span class="cn">NULL</span>,
-  ggplot_nrow <span class="op">=</span> <span class="cn">NULL</span>,
-  show_nchar_case_error <span class="op">=</span> <span class="fl">135</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sleep_time_series</span><span class="op">(</span></span>
+<span>  <span class="va">user_id</span>,</span>
+<span>  <span class="va">token</span>,</span>
+<span>  <span class="va">date_start</span>,</span>
+<span>  <span class="va">date_end</span>,</span>
+<span>  ggplot_color_palette <span class="op">=</span> <span class="st">"ggsci::blue_material"</span>,</span>
+<span>  ggplot_ncol <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ggplot_nrow <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  show_nchar_case_error <span class="op">=</span> <span class="fl">135</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>user_id</dt>
 <dd><p>a character string specifying the encoded ID of the user. For instance '99xxxx' of the following URL 'https://www.fitbit.com/user/99xxxx' of the user's account corresponds to the 'user_id'</p></dd>
+
+
 <dt>token</dt>
 <dd><p>a character string specifying the secret token that a user receives when registers a new application in https://dev.fitbit.com/apps</p></dd>
+
+
 <dt>date_start</dt>
 <dd><p>a character string specifying the start Date for which the sleep data should be returned. For instance, the date '2021-12-31' where the input order is 'year-month-day'</p></dd>
+
+
 <dt>date_end</dt>
 <dd><p>a character string specifying the end Date for which the sleep data should be returned. For instance, the date '2021-12-31' where the input order is 'year-month-day'</p></dd>
+
+
 <dt>ggplot_color_palette</dt>
 <dd><p>a character string specifying the color palette to be used. For a full list of palettes used in the ggplot see:  https://pmassicotte.github.io/paletteer_gallery/ The following color-palettes were tested and work well: "rcartocolor::Purp", "rcartocolor::Teal"</p></dd>
+
+
 <dt>ggplot_ncol</dt>
 <dd><p>either NULL or an integer specifying the number of columns of the output ggplot</p></dd>
+
+
 <dt>ggplot_nrow</dt>
 <dd><p>either NULL or an integer specifying the number of rows of the output ggplot</p></dd>
+
+
 <dt>show_nchar_case_error</dt>
 <dd><p>an integer that specifies the number of characters that will be returned in case on an error. The default value is 135 characters.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>a boolean. If TRUE then information will be printed out in the console</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>an object of class list</p>
+    
+
+<p>an object of class list</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlampros/fitbitViz" class="external-link">fitbitViz</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#.........................................</span></span>
-<span class="r-in"><span class="co"># first compute the sleep time time series</span></span>
-<span class="r-in"><span class="co">#.........................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">USER_ID</span> <span class="op">=</span> <span class="st">'99xxxx'</span></span>
-<span class="r-in"><span class="va">token</span> <span class="op">=</span> <span class="st">'my_long_web_api_token'</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">sleep_ts</span> <span class="op">=</span> <span class="fu">sleep_time_series</span><span class="op">(</span>user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span>
-<span class="r-in">                             token <span class="op">=</span> <span class="va">token</span>,</span>
-<span class="r-in">                             date_start <span class="op">=</span> <span class="st">'2021-03-09'</span>,</span>
-<span class="r-in">                             date_end <span class="op">=</span> <span class="st">'2021-03-16'</span>,</span>
-<span class="r-in">                             ggplot_color_palette <span class="op">=</span> <span class="st">'ggsci::blue_material'</span>,</span>
-<span class="r-in">                             show_nchar_case_error <span class="op">=</span> <span class="fl">135</span>,</span>
-<span class="r-in">                             verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">sleep_ts</span><span class="op">$</span><span class="va">plt_lev_segments</span></span>
-<span class="r-in"><span class="va">sleep_ts</span><span class="op">$</span><span class="va">plt_lev_heatmap</span></span>
-<span class="r-in"><span class="va">sleep_ts</span><span class="op">$</span><span class="va">heatmap_data</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#...........................................</span></span>
-<span class="r-in"><span class="co"># (option to) save the ggplot to a .png file</span></span>
-<span class="r-in"><span class="co">#...........................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">png_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">'.png'</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>filename <span class="op">=</span> <span class="va">png_file</span>,</span>
-<span class="r-in">                plot <span class="op">=</span> <span class="va">sleep_ts</span><span class="op">$</span><span class="va">plt_lev_segments</span>,</span>
-<span class="r-in">                device <span class="op">=</span> <span class="st">'png'</span>,</span>
-<span class="r-in">                scale <span class="op">=</span> <span class="fl">1</span>,</span>
-<span class="r-in">                width <span class="op">=</span> <span class="fl">35</span>,</span>
-<span class="r-in">                height <span class="op">=</span> <span class="fl">25</span>,</span>
-<span class="r-in">                limitsize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlampros/fitbitViz" class="external-link">fitbitViz</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#.........................................</span></span></span>
+<span class="r-in"><span><span class="co"># first compute the sleep time time series</span></span></span>
+<span class="r-in"><span><span class="co">#.........................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">USER_ID</span> <span class="op">=</span> <span class="st">'99xxxx'</span></span></span>
+<span class="r-in"><span><span class="va">token</span> <span class="op">=</span> <span class="st">'my_long_web_api_token'</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sleep_ts</span> <span class="op">=</span> <span class="fu">sleep_time_series</span><span class="op">(</span>user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span></span>
+<span class="r-in"><span>                             token <span class="op">=</span> <span class="va">token</span>,</span></span>
+<span class="r-in"><span>                             date_start <span class="op">=</span> <span class="st">'2021-03-09'</span>,</span></span>
+<span class="r-in"><span>                             date_end <span class="op">=</span> <span class="st">'2021-03-16'</span>,</span></span>
+<span class="r-in"><span>                             ggplot_color_palette <span class="op">=</span> <span class="st">'ggsci::blue_material'</span>,</span></span>
+<span class="r-in"><span>                             show_nchar_case_error <span class="op">=</span> <span class="fl">135</span>,</span></span>
+<span class="r-in"><span>                             verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sleep_ts</span><span class="op">$</span><span class="va">plt_lev_segments</span></span></span>
+<span class="r-in"><span><span class="va">sleep_ts</span><span class="op">$</span><span class="va">plt_lev_heatmap</span></span></span>
+<span class="r-in"><span><span class="va">sleep_ts</span><span class="op">$</span><span class="va">heatmap_data</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#...........................................</span></span></span>
+<span class="r-in"><span><span class="co"># (option to) save the ggplot to a .png file</span></span></span>
+<span class="r-in"><span><span class="co">#...........................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">png_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">'.png'</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>filename <span class="op">=</span> <span class="va">png_file</span>,</span></span>
+<span class="r-in"><span>                plot <span class="op">=</span> <span class="va">sleep_ts</span><span class="op">$</span><span class="va">plt_lev_segments</span>,</span></span>
+<span class="r-in"><span>                device <span class="op">=</span> <span class="st">'png'</span>,</span></span>
+<span class="r-in"><span>                scale <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>                width <span class="op">=</span> <span class="fl">35</span>,</span></span>
+<span class="r-in"><span>                height <span class="op">=</span> <span class="fl">25</span>,</span></span>
+<span class="r-in"><span>                limitsize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -157,7 +176,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

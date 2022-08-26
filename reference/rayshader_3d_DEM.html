@@ -63,40 +63,57 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">rayshader_3d_DEM</span><span class="op">(</span>
-  <span class="va">rst_buf</span>,
-  <span class="va">rst_ext</span>,
-  linestring_ASC_DESC <span class="op">=</span> <span class="cn">NULL</span>,
-  elevation_sample_points <span class="op">=</span> <span class="cn">NULL</span>,
-  zoom <span class="op">=</span> <span class="fl">0.5</span>,
-  windowsize <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1600</span>, <span class="fl">1000</span><span class="op">)</span>,
-  add_shadow_rescale_original <span class="op">=</span> <span class="cn">FALSE</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">rayshader_3d_DEM</span><span class="op">(</span></span>
+<span>  <span class="va">rst_buf</span>,</span>
+<span>  <span class="va">rst_ext</span>,</span>
+<span>  linestring_ASC_DESC <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  elevation_sample_points <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  zoom <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  windowsize <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1600</span>, <span class="fl">1000</span><span class="op">)</span>,</span>
+<span>  add_shadow_rescale_original <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>rst_buf</dt>
 <dd><p>this parameter corresponds to the 'sfc_obj' object of the 'extend_AOI_buffer()' function</p></dd>
+
+
 <dt>rst_ext</dt>
 <dd><p>this parameter corresponds to the 'raster_obj_extent' object of the 'extend_AOI_buffer()' function</p></dd>
+
+
 <dt>linestring_ASC_DESC</dt>
 <dd><p>If NULL then this parameter will be ignored. Otherwise, it can be an 'sf' object or a named list of length 2 (that corresponds to the output of the 'gps_lat_lon_to_LINESTRING()' function)</p></dd>
+
+
 <dt>elevation_sample_points</dt>
 <dd><p>if NULL then this parameter will be ignored. Otherwise, it corresponds to a data.table with column names 'latitude', 'longitude' and 'AltitudeMeters'. For instance, it can consist of 3 or 4 rows that will be displayed as vertical lines in the 3-dimensionsal map to visualize sample locations of the route (the latitudes and longitudes must exist in the output data.table of the 'GPS_TCX_data()' function)</p></dd>
+
+
 <dt>zoom</dt>
 <dd><p>a float number. Lower values increase the 3-dimensional DEM output. The default value is 0.5</p></dd>
+
+
 <dt>windowsize</dt>
 <dd><p>a numeric vector specifying the window dimensions (x,y) of the output 3-dimensional map. The default vector is c(1600, 1000)</p></dd>
+
+
 <dt>add_shadow_rescale_original</dt>
 <dd><p>a boolean. If TRUE, then 'hillshade' will be scaled to match the dimensions of 'shadowmap'. See also the 'rayshader::add_shadow()' function for more information.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>a boolean. If TRUE then information will be printed out in the console</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>it doesn't return an object but it displays a 3-dimensional 'rayshader' object</p>
+    
+
+<p>it doesn't return an object but it displays a 3-dimensional 'rayshader' object</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -105,139 +122,139 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlampros/fitbitViz" class="external-link">fitbitViz</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#............................</span></span>
-<span class="r-in"><span class="co"># first extract the log-id(s)</span></span>
-<span class="r-in"><span class="co">#............................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">USER_ID</span> <span class="op">=</span> <span class="st">'99xxxx'</span></span>
-<span class="r-in"><span class="va">token</span> <span class="op">=</span> <span class="st">'my_long_web_api_token'</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">log_id</span> <span class="op">=</span> <span class="fu"><a href="extract_LOG_ID.html">extract_LOG_ID</a></span><span class="op">(</span>user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span>
-<span class="r-in">                        token <span class="op">=</span> <span class="va">token</span>,</span>
-<span class="r-in">                        after_Date <span class="op">=</span> <span class="st">'2021-03-13'</span>,</span>
-<span class="r-in">                        limit <span class="op">=</span> <span class="fl">10</span>,</span>
-<span class="r-in">                        sort <span class="op">=</span> <span class="st">'asc'</span>,</span>
-<span class="r-in">                        verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">log_id</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#...................................</span></span>
-<span class="r-in"><span class="co"># then return the gps-ctx data.table</span></span>
-<span class="r-in"><span class="co">#...................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">res_tcx</span> <span class="op">=</span> <span class="fu"><a href="GPS_TCX_data.html">GPS_TCX_data</a></span><span class="op">(</span>log_id <span class="op">=</span> <span class="va">log_id</span>,</span>
-<span class="r-in">                       user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span>
-<span class="r-in">                       token <span class="op">=</span> <span class="va">token</span>,</span>
-<span class="r-in">                       time_zone <span class="op">=</span> <span class="st">'Europe/Athens'</span>,</span>
-<span class="r-in">                       verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">res_tcx</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#....................................................</span></span>
-<span class="r-in"><span class="co"># then compute the sf-object buffer and raster-extend</span></span>
-<span class="r-in"><span class="co">#....................................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">sf_rst_ext</span> <span class="op">=</span> <span class="fu"><a href="extend_AOI_buffer.html">extend_AOI_buffer</a></span><span class="op">(</span>dat_gps_tcx <span class="op">=</span> <span class="va">res_tcx</span>,</span>
-<span class="r-in">                               buffer_in_meters <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span class="r-in">                               CRS <span class="op">=</span> <span class="fl">4326</span>,</span>
-<span class="r-in">                               verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">sf_rst_ext</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#...............................................................</span></span>
-<span class="r-in"><span class="co"># Download the Copernicus DEM 30m elevation data because it has</span></span>
-<span class="r-in"><span class="co"># a better resolution, it takes a bit longer to download because</span></span>
-<span class="r-in"><span class="co"># the .tif file size is bigger</span></span>
-<span class="r-in"><span class="co">#...............................................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">dem_dir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># dem_dir</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">dem30</span> <span class="op">=</span> <span class="fu">CopernicusDEM</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CopernicusDEM/man/aoi_geom_save_tif_matches.html" class="external-link">aoi_geom_save_tif_matches</a></span><span class="op">(</span>sf_or_file <span class="op">=</span> <span class="va">sf_rst_ext</span><span class="op">$</span><span class="va">sfc_obj</span>,</span>
-<span class="r-in">                                                 dir_save_tifs <span class="op">=</span> <span class="va">dem_dir</span>,</span>
-<span class="r-in">                                                 resolution <span class="op">=</span> <span class="fl">30</span>,</span>
-<span class="r-in">                                                 crs_value <span class="op">=</span> <span class="fl">4326</span>,</span>
-<span class="r-in">                                                 threads <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span class="r-in">                                                 verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">TIF</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">dem_dir</span>, pattern <span class="op">=</span> <span class="st">'.tif'</span>, full.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># TIF</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">TIF</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="co">#....................................................</span></span>
-<span class="r-in">  <span class="co"># create a .VRT file if I have more than 1 .tif files</span></span>
-<span class="r-in">  <span class="co">#....................................................</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">file_out</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dem_dir</span>, <span class="st">'VRT_mosaic_FILE.vrt'</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">vrt_dem30</span> <span class="op">=</span> <span class="fu">create_VRT_from_dir</span><span class="op">(</span>dir_tifs <span class="op">=</span> <span class="va">dem_dir</span>,</span>
-<span class="r-in">                                  output_path_VRT <span class="op">=</span> <span class="va">file_out</span>,</span>
-<span class="r-in">                                  verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">TIF</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="co">#..................................................</span></span>
-<span class="r-in">  <span class="co"># if I have a single .tif file keep the first index</span></span>
-<span class="r-in">  <span class="co">#..................................................</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">file_out</span> <span class="op">=</span> <span class="va">TIF</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">raysh_rst</span> <span class="op">=</span> <span class="fu"><a href="crop_DEM.html">crop_DEM</a></span><span class="op">(</span>tif_or_vrt_dem_file <span class="op">=</span> <span class="va">file_out</span>,</span>
-<span class="r-in">                     sf_buffer_obj <span class="op">=</span> <span class="va">sf_rst_ext</span><span class="op">$</span><span class="va">sfc_obj</span>,</span>
-<span class="r-in">                     verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># terra::plot(raysh_rst)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#................................................................</span></span>
-<span class="r-in"><span class="co"># create the 'elevation_sample_points' data.table parameter based</span></span>
-<span class="r-in"><span class="co"># on the min., middle  and max. altitude of the 'res_tcx' data</span></span>
-<span class="r-in"><span class="co">#................................................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">idx_3m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.min</a></span><span class="op">(</span><span class="va">res_tcx</span><span class="op">$</span><span class="va">AltitudeMeters</span><span class="op">)</span>,</span>
-<span class="r-in">           <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">res_tcx</span><span class="op">$</span><span class="va">AltitudeMeters</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>,</span>
-<span class="r-in">           <span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.max</a></span><span class="op">(</span><span class="va">res_tcx</span><span class="op">$</span><span class="va">AltitudeMeters</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">cols_3m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'latitude'</span>, <span class="st">'longitude'</span>, <span class="st">'AltitudeMeters'</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dat_3m</span> <span class="op">=</span> <span class="va">res_tcx</span><span class="op">[</span><span class="va">idx_3m</span>, <span class="va">..cols_3m</span><span class="op">]</span></span>
-<span class="r-in"><span class="co"># dat_3m</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#...............................................................</span></span>
-<span class="r-in"><span class="co"># Split the route in 2 parts based on the maximum altitude value</span></span>
-<span class="r-in"><span class="co">#...............................................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">linestring_dat</span> <span class="op">=</span> <span class="fu"><a href="gps_lat_lon_to_LINESTRING.html">gps_lat_lon_to_LINESTRING</a></span><span class="op">(</span>dat_gps_tcx <span class="op">=</span> <span class="va">res_tcx</span>,</span>
-<span class="r-in">                                           CRS <span class="op">=</span> <span class="fl">4326</span>,</span>
-<span class="r-in">                                           time_split_asc_desc <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span class="r-in">                                           verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#.....................................................</span></span>
-<span class="r-in"><span class="co"># Conversion of the 'SpatRaster' to a raster object</span></span>
-<span class="r-in"><span class="co"># because the 'rayshader' package accepts only rasters</span></span>
-<span class="r-in"><span class="co">#.....................................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">rst_obj</span> <span class="op">=</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/raster.html" class="external-link">raster</a></span><span class="op">(</span><span class="va">raysh_rst</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/projection.html" class="external-link">projection</a></span><span class="op">(</span><span class="va">rst_obj</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/crs.html" class="external-link">crs</a></span><span class="op">(</span><span class="va">raysh_rst</span>, proj <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#.....................................</span></span>
-<span class="r-in"><span class="co"># open the 3-dimensional rayshader map</span></span>
-<span class="r-in"><span class="co">#.....................................</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">ray_out</span> <span class="op">=</span> <span class="fu">rayshader_3d_DEM</span><span class="op">(</span>rst_buf <span class="op">=</span> <span class="va">rst_obj</span>,</span>
-<span class="r-in">                           rst_ext <span class="op">=</span> <span class="va">sf_rst_ext</span><span class="op">$</span><span class="va">raster_obj_extent</span>,</span>
-<span class="r-in">                           linestring_ASC_DESC <span class="op">=</span> <span class="va">linestring_dat</span>,</span>
-<span class="r-in">                           elevation_sample_points <span class="op">=</span> <span class="va">dat_3m</span>,</span>
-<span class="r-in">                           zoom <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span class="r-in">                           windowsize <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1600</span>, <span class="fl">1000</span><span class="op">)</span>,</span>
-<span class="r-in">                           add_shadow_rescale_original <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span class="r-in">                           verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlampros/fitbitViz" class="external-link">fitbitViz</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#............................</span></span></span>
+<span class="r-in"><span><span class="co"># first extract the log-id(s)</span></span></span>
+<span class="r-in"><span><span class="co">#............................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">USER_ID</span> <span class="op">=</span> <span class="st">'99xxxx'</span></span></span>
+<span class="r-in"><span><span class="va">token</span> <span class="op">=</span> <span class="st">'my_long_web_api_token'</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">log_id</span> <span class="op">=</span> <span class="fu"><a href="extract_LOG_ID.html">extract_LOG_ID</a></span><span class="op">(</span>user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span></span>
+<span class="r-in"><span>                        token <span class="op">=</span> <span class="va">token</span>,</span></span>
+<span class="r-in"><span>                        after_Date <span class="op">=</span> <span class="st">'2021-03-13'</span>,</span></span>
+<span class="r-in"><span>                        limit <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>                        sort <span class="op">=</span> <span class="st">'asc'</span>,</span></span>
+<span class="r-in"><span>                        verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">log_id</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#...................................</span></span></span>
+<span class="r-in"><span><span class="co"># then return the gps-ctx data.table</span></span></span>
+<span class="r-in"><span><span class="co">#...................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">res_tcx</span> <span class="op">=</span> <span class="fu"><a href="GPS_TCX_data.html">GPS_TCX_data</a></span><span class="op">(</span>log_id <span class="op">=</span> <span class="va">log_id</span>,</span></span>
+<span class="r-in"><span>                       user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span></span>
+<span class="r-in"><span>                       token <span class="op">=</span> <span class="va">token</span>,</span></span>
+<span class="r-in"><span>                       time_zone <span class="op">=</span> <span class="st">'Europe/Athens'</span>,</span></span>
+<span class="r-in"><span>                       verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">res_tcx</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#....................................................</span></span></span>
+<span class="r-in"><span><span class="co"># then compute the sf-object buffer and raster-extend</span></span></span>
+<span class="r-in"><span><span class="co">#....................................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sf_rst_ext</span> <span class="op">=</span> <span class="fu"><a href="extend_AOI_buffer.html">extend_AOI_buffer</a></span><span class="op">(</span>dat_gps_tcx <span class="op">=</span> <span class="va">res_tcx</span>,</span></span>
+<span class="r-in"><span>                               buffer_in_meters <span class="op">=</span> <span class="fl">1000</span>,</span></span>
+<span class="r-in"><span>                               CRS <span class="op">=</span> <span class="fl">4326</span>,</span></span>
+<span class="r-in"><span>                               verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sf_rst_ext</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#...............................................................</span></span></span>
+<span class="r-in"><span><span class="co"># Download the Copernicus DEM 30m elevation data because it has</span></span></span>
+<span class="r-in"><span><span class="co"># a better resolution, it takes a bit longer to download because</span></span></span>
+<span class="r-in"><span><span class="co"># the .tif file size is bigger</span></span></span>
+<span class="r-in"><span><span class="co">#...............................................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dem_dir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># dem_dir</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dem30</span> <span class="op">=</span> <span class="fu">CopernicusDEM</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CopernicusDEM/man/aoi_geom_save_tif_matches.html" class="external-link">aoi_geom_save_tif_matches</a></span><span class="op">(</span>sf_or_file <span class="op">=</span> <span class="va">sf_rst_ext</span><span class="op">$</span><span class="va">sfc_obj</span>,</span></span>
+<span class="r-in"><span>                                                 dir_save_tifs <span class="op">=</span> <span class="va">dem_dir</span>,</span></span>
+<span class="r-in"><span>                                                 resolution <span class="op">=</span> <span class="fl">30</span>,</span></span>
+<span class="r-in"><span>                                                 crs_value <span class="op">=</span> <span class="fl">4326</span>,</span></span>
+<span class="r-in"><span>                                                 threads <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                                                 verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">TIF</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">dem_dir</span>, pattern <span class="op">=</span> <span class="st">'.tif'</span>, full.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># TIF</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">TIF</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="co">#....................................................</span></span></span>
+<span class="r-in"><span>  <span class="co"># create a .VRT file if I have more than 1 .tif files</span></span></span>
+<span class="r-in"><span>  <span class="co">#....................................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">file_out</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dem_dir</span>, <span class="st">'VRT_mosaic_FILE.vrt'</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">vrt_dem30</span> <span class="op">=</span> <span class="fu">create_VRT_from_dir</span><span class="op">(</span>dir_tifs <span class="op">=</span> <span class="va">dem_dir</span>,</span></span>
+<span class="r-in"><span>                                  output_path_VRT <span class="op">=</span> <span class="va">file_out</span>,</span></span>
+<span class="r-in"><span>                                  verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">TIF</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="co">#..................................................</span></span></span>
+<span class="r-in"><span>  <span class="co"># if I have a single .tif file keep the first index</span></span></span>
+<span class="r-in"><span>  <span class="co">#..................................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">file_out</span> <span class="op">=</span> <span class="va">TIF</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">raysh_rst</span> <span class="op">=</span> <span class="fu"><a href="crop_DEM.html">crop_DEM</a></span><span class="op">(</span>tif_or_vrt_dem_file <span class="op">=</span> <span class="va">file_out</span>,</span></span>
+<span class="r-in"><span>                     sf_buffer_obj <span class="op">=</span> <span class="va">sf_rst_ext</span><span class="op">$</span><span class="va">sfc_obj</span>,</span></span>
+<span class="r-in"><span>                     verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># terra::plot(raysh_rst)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#................................................................</span></span></span>
+<span class="r-in"><span><span class="co"># create the 'elevation_sample_points' data.table parameter based</span></span></span>
+<span class="r-in"><span><span class="co"># on the min., middle  and max. altitude of the 'res_tcx' data</span></span></span>
+<span class="r-in"><span><span class="co">#................................................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">idx_3m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.min</a></span><span class="op">(</span><span class="va">res_tcx</span><span class="op">$</span><span class="va">AltitudeMeters</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>           <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">res_tcx</span><span class="op">$</span><span class="va">AltitudeMeters</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>           <span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.max</a></span><span class="op">(</span><span class="va">res_tcx</span><span class="op">$</span><span class="va">AltitudeMeters</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">cols_3m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'latitude'</span>, <span class="st">'longitude'</span>, <span class="st">'AltitudeMeters'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dat_3m</span> <span class="op">=</span> <span class="va">res_tcx</span><span class="op">[</span><span class="va">idx_3m</span>, <span class="va">..cols_3m</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="co"># dat_3m</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#...............................................................</span></span></span>
+<span class="r-in"><span><span class="co"># Split the route in 2 parts based on the maximum altitude value</span></span></span>
+<span class="r-in"><span><span class="co">#...............................................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">linestring_dat</span> <span class="op">=</span> <span class="fu"><a href="gps_lat_lon_to_LINESTRING.html">gps_lat_lon_to_LINESTRING</a></span><span class="op">(</span>dat_gps_tcx <span class="op">=</span> <span class="va">res_tcx</span>,</span></span>
+<span class="r-in"><span>                                           CRS <span class="op">=</span> <span class="fl">4326</span>,</span></span>
+<span class="r-in"><span>                                           time_split_asc_desc <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>                                           verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#.....................................................</span></span></span>
+<span class="r-in"><span><span class="co"># Conversion of the 'SpatRaster' to a raster object</span></span></span>
+<span class="r-in"><span><span class="co"># because the 'rayshader' package accepts only rasters</span></span></span>
+<span class="r-in"><span><span class="co">#.....................................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">rst_obj</span> <span class="op">=</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/raster.html" class="external-link">raster</a></span><span class="op">(</span><span class="va">raysh_rst</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/projection.html" class="external-link">projection</a></span><span class="op">(</span><span class="va">rst_obj</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/crs.html" class="external-link">crs</a></span><span class="op">(</span><span class="va">raysh_rst</span>, proj <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#.....................................</span></span></span>
+<span class="r-in"><span><span class="co"># open the 3-dimensional rayshader map</span></span></span>
+<span class="r-in"><span><span class="co">#.....................................</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">ray_out</span> <span class="op">=</span> <span class="fu">rayshader_3d_DEM</span><span class="op">(</span>rst_buf <span class="op">=</span> <span class="va">rst_obj</span>,</span></span>
+<span class="r-in"><span>                           rst_ext <span class="op">=</span> <span class="va">sf_rst_ext</span><span class="op">$</span><span class="va">raster_obj_extent</span>,</span></span>
+<span class="r-in"><span>                           linestring_ASC_DESC <span class="op">=</span> <span class="va">linestring_dat</span>,</span></span>
+<span class="r-in"><span>                           elevation_sample_points <span class="op">=</span> <span class="va">dat_3m</span>,</span></span>
+<span class="r-in"><span>                           zoom <span class="op">=</span> <span class="fl">0.5</span>,</span></span>
+<span class="r-in"><span>                           windowsize <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1600</span>, <span class="fl">1000</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                           add_shadow_rescale_original <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                           verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -252,7 +269,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

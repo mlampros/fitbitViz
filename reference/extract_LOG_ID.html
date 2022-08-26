@@ -63,55 +63,68 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">extract_LOG_ID</span><span class="op">(</span>
-  <span class="va">user_id</span>,
-  <span class="va">token</span>,
-  after_Date <span class="op">=</span> <span class="st">"2021-03-13"</span>,
-  limit <span class="op">=</span> <span class="fl">10</span>,
-  sort <span class="op">=</span> <span class="st">"asc"</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">extract_LOG_ID</span><span class="op">(</span></span>
+<span>  <span class="va">user_id</span>,</span>
+<span>  <span class="va">token</span>,</span>
+<span>  after_Date <span class="op">=</span> <span class="st">"2021-03-13"</span>,</span>
+<span>  limit <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  sort <span class="op">=</span> <span class="st">"asc"</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>user_id</dt>
 <dd><p>a character string specifying the encoded ID of the user. For instance '99xxxx' of the following URL 'https://www.fitbit.com/user/99xxxx' of the user's account corresponds to the 'user_id'</p></dd>
+
+
 <dt>token</dt>
 <dd><p>a character string specifying the secret token that a user receives when registers a new application in https://dev.fitbit.com/apps</p></dd>
+
+
 <dt>after_Date</dt>
 <dd><p>a character string specifying the Date after which the log-ids will be returned. For instance, the date '2021-12-31' where the input order is 'year-month-day'</p></dd>
+
+
 <dt>limit</dt>
 <dd><p>an integer specifying the total of log-id's to return. The default value is 10</p></dd>
+
+
 <dt>sort</dt>
 <dd><p>a character string specifying the order ('asc', 'desc') based on which the output log-id's should be sorted</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>a boolean. If TRUE then information will be printed out in the console</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>an integer specifying the log ID</p>
+    
+
+<p>an integer specifying the log ID</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlampros/fitbitViz" class="external-link">fitbitViz</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">USER_ID</span> <span class="op">=</span> <span class="st">'99xxxx'</span></span>
-<span class="r-in"><span class="va">token</span> <span class="op">=</span> <span class="st">'my_long_web_api_token'</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">log_id</span> <span class="op">=</span> <span class="fu">extract_LOG_ID</span><span class="op">(</span>user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span>
-<span class="r-in">                        token <span class="op">=</span> <span class="va">token</span>,</span>
-<span class="r-in">                        after_Date <span class="op">=</span> <span class="st">'2021-03-13'</span>,</span>
-<span class="r-in">                        limit <span class="op">=</span> <span class="fl">10</span>,</span>
-<span class="r-in">                        sort <span class="op">=</span> <span class="st">'asc'</span>,</span>
-<span class="r-in">                        verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">log_id</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlampros/fitbitViz" class="external-link">fitbitViz</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">USER_ID</span> <span class="op">=</span> <span class="st">'99xxxx'</span></span></span>
+<span class="r-in"><span><span class="va">token</span> <span class="op">=</span> <span class="st">'my_long_web_api_token'</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">log_id</span> <span class="op">=</span> <span class="fu">extract_LOG_ID</span><span class="op">(</span>user_id <span class="op">=</span> <span class="va">USER_ID</span>,</span></span>
+<span class="r-in"><span>                        token <span class="op">=</span> <span class="va">token</span>,</span></span>
+<span class="r-in"><span>                        after_Date <span class="op">=</span> <span class="st">'2021-03-13'</span>,</span></span>
+<span class="r-in"><span>                        limit <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>                        sort <span class="op">=</span> <span class="st">'asc'</span>,</span></span>
+<span class="r-in"><span>                        verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">log_id</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -126,7 +139,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
