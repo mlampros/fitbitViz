@@ -1,8 +1,21 @@
 
+
+## fitbitViz 1.0.5
+
+* I removed *'rgdal'* from 'Suggests' as it is no longer required (see: https://r-spatial.org/r/2022/12/14/evolution2.html)
+* I updated the *README.md* file because the registration of an Application of the fitbit web API has changed
+* I added the *'simplifyVector'* parameter to the *'base_url_request()'* function
+* I added the *'fitbit_data_type_by_date()'* function which includes the new fitbit data types 'spo2' (Blood Oxygen Saturation), 'hrv' (Heart Rate Variability), 'br' (Breathing Rate), 'temp' (Temperature) and 'cardioscore' (Cardio Fitness Score or VO2 Max). For more details see: https://dev.fitbit.com/build/reference/web-api/
+* I added the *'refresh_token_app()'* function which allows the user to refresh the token once the initial access token of the existing Fitbit Application is expired (after 8 hours)
+* I added a deprecation message to the *'heart_rate_variability_sleep_time()'* function because it is replaced by the 'fitbit_data_type_by_date()' function when the 'type' parameter is set to 'hrv' (Heart Rate Variability)
+* I updated the vignette by adding information regarding the *'refresh_token_app()'* function. I also replaced the *'heart_rate_variability_sleep_time()'* with the *'fitbit_data_type_by_date()'* function by setting the 'type' parameter to 'hrv'
+* I added the internal *'plot_data_type()'* function
+
+
 ## fitbitViz 1.0.4
 
 * I've added the *'fitbitViz.R'* file to include the *'utils::globalVariables()'* dependency
-* I've modified the code of the *'sleep_single_day()'* and *'sleep_time_series()'* functions to account for an error case
+* I've modified internally the code of the *'sleep_single_day()'* and *'sleep_time_series()'* functions to account for an error case
 
 
 ## fitbitViz 1.0.3

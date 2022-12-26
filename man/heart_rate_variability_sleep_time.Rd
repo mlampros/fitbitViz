@@ -27,7 +27,9 @@ heart_rate_variability_sleep_time(
 an object of class list
 }
 \description{
-Heart Rate Variability during Sleep Time (the root mean square of successive differences)
+`r lifecycle::badge("deprecated")`
+
+This function was deprecated, so please use the 'fitbit_data_type_by_date()' function instead with the 'type' parameter set to 'hrv' (Heart Rate Variability). See the documentation and the example section of the 'fitbit_data_type_by_date()' function for more details.
 }
 \details{
 I use the '1min' rather than the '1sec' interval because it is consistent (it shows the 1-minute differences), whereas in case of '1sec' the difference between observations varies between 1 second and less than 60 seconds

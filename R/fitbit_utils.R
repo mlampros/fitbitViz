@@ -16,7 +16,8 @@ utils::globalVariables(c('time',
                          'dateTime_start',
                          'GROUP',
                          '..cols_accum',
-                         '.SD'))
+                         '.SD',
+                         'minute'))
 
 
 #' inner function of 'compute_elapsed_time'
@@ -77,6 +78,7 @@ split_year_in_weeks = function(year) {
 #' @param url a character string specifying the input url
 #' @param oauth_token a character string specifying the authentication token
 #' @param show_nchar_case_error an integer value specifying the number of characters to show in case of an error
+#' @param simplifyVector a boolean. Coerce JSON arrays containing only primitives into an atomic vector (see the documentation of the jsonlite::fromJSON() function)
 #' @return an object of class list
 #'
 #' @importFrom httr GET add_headers content
@@ -87,18 +89,19 @@ split_year_in_weeks = function(year) {
 
 base_url_request = function(url,
                             oauth_token,
-                            show_nchar_case_error = 135) {
+                            show_nchar_case_error = 135,
+                            simplifyVector = TRUE) {
 
   auth_code = paste("Bearer", oauth_token)
   query_response = httr::GET(url = url, httr::add_headers(Authorization = auth_code))
 
-  if (query_response$status_code != 200) {                                              # in case of an error use "httr::content()" to get more details
+  if (query_response$status_code != 200) {                                                     # in case of an error use "httr::content()" to get more details
     content_list_obj = httr::content(query_response, "parsed")
     stop(glue::glue("The request gave an error code of '{query_response$status_code}' with the following first '{show_nchar_case_error}' characters as error message: '{substr(content_list_obj, 1, show_nchar_case_error)}'"), call. = F)
   }
   else {
-    content_list_obj = httr::content(query_response, as = "text")                       # see: https://cran.r-project.org/web/packages/jsonlite/vignettes/json-apis.html
-    content_list_obj = jsonlite::fromJSON(content_list_obj, simplifyVector = TRUE)
+    content_list_obj = httr::content(query_response, as = "text")                              # see: https://cran.r-project.org/web/packages/jsonlite/vignettes/json-apis.html
+    content_list_obj = jsonlite::fromJSON(content_list_obj, simplifyVector = simplifyVector)
   }
 
   return(content_list_obj)
@@ -261,6 +264,260 @@ heart_rate_time_series = function(user_id,
 
 
 
+#' Refresh Token of an existing application
+#'
+#' @param client_id a character string specifying the 'client_id' of the registered (existing) Fitbit application
+#' @param client_secret a character string specifying the 'client_secret' of the registered (existing) Fitbit application
+#' @param refresh_token a character string specifying the 'refresh_token' of the registered (existing) Fitbit application
+#' @return a named list that includes access_token, expires_in, refresh_token, scope, token_type, user_id
+#'
+#' @details
+#'
+#' A registered Fitbit application has a time limit of 8 hours. Therefore, the user has to refresh the token after the expiration using the 'client_id', 'client_secret' and 'refresh_token' that it's available for the registered application.
+#' Based on the Fitbit API Documentation "After the Access Token expiration time has passed your requests will receive a 401 HTTP error. When this happens, your app should use the Refresh Token to get a new pair of tokens"
+#'
+#' @export
+#' @importFrom glue glue
+#' @importFrom base64enc base64encode
+#' @importFrom httr POST add_headers content
+#' @examples
+#'
+#' \dontrun{
+#'
+#' require(fitbitViz)
+#'
+#' # client id, client secret and refresh token of
+#' # the existing Fitbit Application
+#' Client_ID = 'xxxxxx'
+#' Client_SECRET = 'xxxxxxxxxxxxxxxxxx'
+#' Refresh_TOKEN = 'xxxxxxxxxxxxxxxxxxxxxxxx'
+#'
+#' # refresh the token
+#' res_token = refresh_token_app(client_id = Client_ID,
+#'                               client_secret = Client_SECRET,
+#'                               refresh_token = Refresh_TOKEN)
+#'
+#' res_token
+#'
+#' # use the updated token to a function
+#'
+#' USER_ID = '99xxxx'
+#' new_TOKEN = res_token$access_token,
+#'
+#' res_type = fitbit_data_type_by_date(user_id = USER_ID,
+#'                                     token = new_TOKEN,
+#'                                     date = '2022-10-12',
+#'                                     type = 'spo2',
+#'                                     show_nchar_case_error = 135)
+#' }
+
+
+refresh_token_app = function(client_id,
+                             client_secret,
+                             refresh_token) {
+
+  basic_char = glue::glue("{client_id}:{client_secret}")
+  auth_basic = base64enc::base64encode(what = charToRaw(basic_char))      # Server apps must pass an Authorization header with their Basic Token, which is their Client ID and Secret formatted like so: "Basic " + base64encode(client_id + ":" + client_secret)
+
+  post_req = httr::POST(url = "https://api.fitbit.com/oauth2/token",
+                        body = list(grant_type = 'refresh_token',
+                                    client_id = client_id,
+                                    refresh_token = refresh_token),
+                        httr::add_headers(.headers = c('Authorization'= glue::glue("Basic {auth_basic}"),
+                                                       'Content-Type' = 'application/x-www-form-urlencoded')),
+                        encode = "form")
+
+  post_dat = httr::content(post_req, "parsed")
+  return(post_dat)
+}
+
+
+
+#' Refresh Token of an existing application
+#'
+#' @param client_id a character string specifying the 'client_id' of the registered (existing) Fitbit application
+#' @param client_secret a character string specifying the 'client_secret' of the registered (existing) Fitbit application
+#' @param refresh_token a character string specifying the 'refresh_token' of the registered (existing) Fitbit application
+#' @return a named list that includes access_token, expires_in, refresh_token, scope, token_type, user_id
+#'
+#' @details
+#'
+#' This plot function is used in the 'fitbit_data_type_by_date' internally to plot the 'spo2' and 'hrv' data types
+#'
+#' @keywords internal
+#' @importFrom glue glue
+#' @importFrom lubridate ymd_hms
+#' @importFrom ggplot2 ggplot aes geom_line scale_x_datetime ylab xlab ggtitle theme element_text element_rect facet_wrap coord_cartesian scale_y_continuous
+#' @importFrom scales date_breaks
+
+
+plot_data_type = function(dat_type_min, type) {
+
+  ylab_name = ifelse(type == 'spo2', 'Blood Oxygen Saturation', 'Heart Rate Variability')
+  x_lab_interval = ifelse(type == 'spo2', "30 mins", "1 hour")
+  line_type = ifelse(type == 'spo2', 'dashed', 'solid')
+
+  dat_type_min$minute = lubridate::ymd_hms(dat_type_min$minute)
+
+  plt = ggplot2::ggplot(dat_type_min, ggplot2::aes(x = minute, y = value)) +
+    ggplot2::geom_line(linetype = line_type, size = 1, color = 'purple') +
+    ggplot2::scale_x_datetime(breaks = scales::date_breaks(x_lab_interval), date_labels = "%H:%M") +
+    ggplot2::ylab(type) +
+    ggplot2::xlab("Hour & Minutes") +
+    ggplot2::ggtitle(glue::glue("{ylab_name} ('{type}')")) +
+    ggplot2::theme(plot.title = ggplot2::element_text(size = "16", hjust = 0.5, face = "bold", colour = "blue"),
+                   strip.background = ggplot2::element_rect(fill = 'blue', colour='black'),
+                   strip.text.x = ggplot2::element_text(size = 16, colour = 'orange', face = 'bold'),
+                   axis.title.x = ggplot2::element_text(size = 12, face = "bold", colour = "blue"),
+                   axis.title.y = ggplot2::element_text(size = 12, face = "bold", colour = "blue"),
+                   axis.text.x = ggplot2::element_text(size = 12, face = "bold", colour = "black", angle = 35, vjust = 1, hjust=1),
+                   axis.text.y = ggplot2::element_text(size = 12, face = "bold", colour = "black"))
+
+  if (type == 'hrv') {
+    plt = plt +
+      ggplot2::facet_wrap(~variable, scales = "free")
+  }
+  else {
+    BEGIN = min(dat_type_min$value) - 1
+    END = max(dat_type_min$value) + 1.0
+
+    plt = plt +
+      ggplot2::coord_cartesian(ylim = c(BEGIN, END)) +
+      ggplot2::scale_y_continuous(breaks = seq(from = BEGIN, to = END, by = 0.5))
+  }
+
+  return(plt)
+}
+
+
+
+#' Fitbit data retrieval for Blood Oxygen Saturation, Heart Rate Variability, Breathing Rate, Temperature and Cardio Fitness Score (or VO2 Max) by Date
+#'
+#' @param user_id a character string specifying the encoded ID of the user. For instance '99xxxx' of the following URL 'https://www.fitbit.com/user/99xxxx' of the user's account corresponds to the 'user_id'
+#' @param token a character string specifying the secret token that a user receives when registers a new application in https://dev.fitbit.com/apps
+#' @param date a character string specifying a Date. For instance, the date '2021-12-31' where the input order is 'year-month-day'
+#' @param type a character string specifying the fitbit data type. One of 'spo2', 'hrv', 'br', 'temp', 'cardioscore'. See the 'details' and 'references' sections for more information
+#' @param plot a boolean. If TRUE then the minutes data will be plotted. This parameter is applicable only to the 'spo2' and 'hrv' types because they return minute data (see the details section for more information). The remaining types ('br', 'temp', 'cardioscore') return daily data.
+#' @param show_nchar_case_error an integer that specifies the number of characters that will be returned in case on an error. The default value is 135 characters.
+#' @return a data.frame
+#'
+#' @details
+#'
+#' \describe{
+#'  \item{'spo2' (\emph{Blood Oxygen Saturation})}{This endpoint returns the SpO2 intraday data for a single date. SpO2 applies specifically to a user's "main sleep", which is the longest single period of time asleep on a given date. Spo2 values are calculated on a 5-minute exponentially-moving average}
+#'  \item{'hrv' (\emph{Heart Rate Variability})}{This endpoint returns the Heart Rate Variability (HRV) intraday data for a single date. HRV data applies specifically to a user's "main sleep", which is the longest single period of time asleep on a given date. It measures the HRV rate at various times and returns Root Mean Square of Successive Differences (rmssd), Low Frequency (LF), High Frequency (HF), and Coverage data for a given measurement. Rmssd measures short-term variability in your heart rate while asleep. LF and HF capture the power in interbeat interval fluctuations within either high frequency or low frequency bands. Finally, coverage refers to data completeness in terms of the number of interbeat intervals}
+#'  \item{'br' (\emph{Breathing Rate})}{This endpoint returns intraday breathing rate data for a specified date. It measures the average breathing rate throughout the day and categories your breathing rate by sleep stage. Sleep stages vary between light sleep, deep sleep, REM sleep, and full sleep}
+#'  \item{'temp' (\emph{Temperature})}{This endpoint returns the Temperature (Skin) data for a single date. It only returns a value for dates on which the Fitbit device was able to record Temperature (skin) data. Temperature (Skin) data applies specifically to a user's "main sleep", which is the longest single period of time asleep on a given date}
+#'  \item{'cardioscore' (\emph{Cardio Fitness Score or VO2 Max})}{The Cardio Fitness Score (also known as VO2 Max) endpoints are used for querying the maximum or optimum rate at which the user's heart, lungs, and muscles can effectively use oxygen during exercise}
+#'  }
+#'
+#'  If the 'type' parameter is one of 'spo2' or 'hrv' and the 'plot' parameter is set to TRUE then the results will appear as a line plot. In case of 'hrv' a multiplot with the following variables will be displayed:
+#'
+#' \describe{
+#'  \item{'rmssd'}{\emph{The Root Mean Square of Successive Differences (RMSSD) between heart beats. It measures short-term variability in the user's heart rate in milliseconds (ms)}}
+#'  \item{'coverage'}{\emph{Data completeness in terms of the number of interbeat intervals}}
+#'  \item{'hf'}{\emph{The power in interbeat interval fluctuations within the high frequency band (0.15 Hz - 0.4 Hz)}}
+#'  \item{'lf'}{\emph{The power in interbeat interval fluctuations within the low frequency band (0.04 Hz - 0.15 Hz)}}
+#'  }
+#'
+#' @references
+#'
+#' https://dev.fitbit.com/build/reference/web-api/intraday/get-spo2-intraday-by-date/
+#'
+#' https://dev.fitbit.com/build/reference/web-api/intraday/get-hrv-intraday-by-date/
+#'
+#' https://dev.fitbit.com/build/reference/web-api/intraday/get-br-intraday-by-date/
+#'
+#' https://dev.fitbit.com/build/reference/web-api/temperature/get-temperature-skin-summary-by-date
+#'
+#' https://dev.fitbit.com/build/reference/web-api/cardio-fitness-score/get-vo2max-summary-by-date/
+#'
+#' @export
+#' @importFrom glue glue
+#' @importFrom reshape2 melt
+#' @examples
+#'
+#' \dontrun{
+#'
+#' require(fitbitViz)
+#'
+#' USER_ID = '99xxxx'
+#' token = 'my_long_web_api_token'
+#'
+#' res_type = fitbit_data_type_by_date(user_id = USER_ID,
+#'                                     token = token,
+#'                                     date = '2022-10-12',
+#'                                     type = 'spo2',
+#'                                     plot = TRUE,
+#'                                     show_nchar_case_error = 135)
+#' res_type
+#'
+#' }
+
+
+fitbit_data_type_by_date = function(user_id,
+                                    token,
+                                    date,
+                                    type = 'spo2',
+                                    plot = FALSE,
+                                    show_nchar_case_error = 135) {
+
+  all_types = c('spo2', 'hrv', 'br', 'temp', 'cardioscore')
+  if (!type %in% all_types) stop(glue::glue("A valid 'type' parameter is one of {paste(all_types, collapse = ', ' )}"))
+
+  if (type == 'temp') {
+    URL = glue::glue('https://api.fitbit.com/1/user/{user_id}/{type}/skin/date/{date}.json')                       # temperature
+  }
+  else if (type == 'cardioscore') {
+    URL = glue::glue('https://api.fitbit.com/1/user/{user_id}/{type}/date/{date}.json')                            # cardioscore
+  }
+  else {
+    URL = glue::glue('https://api.fitbit.com/1/user/{user_id}/{type}/date/{date}/all.json')                        # remaining fitbit types
+  }
+
+  #..........................................................................................................................................................
+  # URL = glue::glue('https://api.fitbit.com/1/user/{user_id}/ecg/list.json?afterDate=2022-09-28&sort=asc&limit=1&offset=0 ')     # ECG [ Electrocardiogram ]
+  # The Fitbit ECG App is not available for fitbit charge 4, see: https://help.fitbit.com/manuals/manual_ecg_en_US.pdf page 10
+  #..........................................................................................................................................................
+
+  dat_type = base_url_request(url = URL,
+                              oauth_token = token,
+                              show_nchar_case_error = show_nchar_case_error,
+                              simplifyVector = ifelse(type == 'br', FALSE, TRUE))
+  if (type == 'spo2') {
+    dat_min = dat_type$minutes
+    if (plot) {
+      print(plot_data_type(dat_type_min = dat_min, type = 'spo2'))
+    }
+    return(dat_min)
+  }
+  else if (type == 'hrv') {
+    dat_min = dat_type$hrv$minutes[[1]]$value
+    dat_min$minute = dat_type$hrv$minutes[[1]]$minute
+    if (plot) {
+      mlt = reshape2::melt(data = dat_min, id.vars = 'minute')
+      print(plot_data_type(dat_type_min = mlt, type = 'hrv'))
+    }
+    return(dat_min)
+  }
+  else if (type == 'br') {
+    vec = unlist(dat_type$br[[1]]$value)
+    nams = names(vec)
+    vals = as.vector(vec)
+    df_br = data.frame(matrix(vals, nrow = 1, ncol = length(vals)))
+    colnames(df_br) = nams
+    return(df_br)
+  }
+  else if (type == 'temp') {
+    return(dat_type$tempSkin)
+  }
+  else {                          # cardioscore
+    return(dat_type$cardioScore)
+  }
+}
+
+
+
 #' Heart Rate Intraday Heatmap (by extracting the 'min.', 'median' and 'max.' values of the day)
 #'
 #' @param heart_rate_intraday_data a list object specifying the intraday heart rate data (this is one of the sublists returned from the 'heart_rate_time_series' function)
@@ -360,6 +617,11 @@ heart_rate_heatmap = function(heart_rate_intraday_data,
 
 #' Heart Rate Variability during Sleep Time (the root mean square of successive differences)
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function was deprecated, so please use the 'fitbit_data_type_by_date()' function instead with the 'type' parameter set to 'hrv' (Heart Rate Variability). See the documentation and the example section of the 'fitbit_data_type_by_date()' function for more details.
+#'
 #' @param heart_rate_data a list object. This is the output of the 'heart_rate_time_series()' function
 #' @param sleep_begin a character string specifying the begin of the sleep time. For instance, the time "00H 40M 0S" where the input order is 'hours-minutes-seconds' and the format corresponds to the 'lubridate::hms()' function
 #' @param sleep_end a character string specifying the end of the sleep time. For instance, the time "08H 00M 0S" where the input order is 'hours-minutes-seconds' and the format corresponds to the 'lubridate::hms()' function
@@ -381,6 +643,7 @@ heart_rate_heatmap = function(heart_rate_intraday_data,
 #' @importFrom varian rmssd
 #' @importFrom data.table setDT
 #' @import ggplot2
+#' @importFrom lifecycle badge deprecate_warn
 #'
 #' @examples
 #'
@@ -426,6 +689,8 @@ heart_rate_variability_sleep_time = function(heart_rate_data,
                                              sleep_end = "08H 00M 0S",
                                              ggplot_hr_var = TRUE,
                                              angle_x_axis = 45) {
+
+  lifecycle::deprecate_warn(when = "1.0.5", what = "heart_rate_variability_sleep_time()", with = "fitbit_data_type_by_date()")
 
   if (heart_rate_data$detail_level != '1min') stop("You have to run the 'heart_rate_time_series' function first with 'detail_level' set to '1min'!", call. = F)
 

@@ -39,11 +39,9 @@ is required so that you can take advantage of the **fitbitViz**
 functions.
 
 There are many resources on the web on how to setup a Fitbit
-application. I modified the following
-[guide](https://obrl-soil.github.io/fitbit-api-r/) which explains in
-detail how to register an application and then receive a token to
-retrieve the Fitbit data for a specific time period (maximum a year).
-The next images and comments explain the whole process,
+application. The [Fitbit web API
+documenation](https://dev.fitbit.com/build/reference/web-api/) includes
+more details. The next images and comments explain the whole process,
 
 -   Go to <https://dev.fitbit.com/> and click on **Manage &gt; Register
     an App**
@@ -60,37 +58,106 @@ The next images and comments explain the whole process,
 
     ![](./man/figures/register_application.png)
 
--   Once the app is created, click on the ‘OAuth 2.0 tutorial page’
-    weblink near the bottom of the screen:
+-   Once the app is created, click on the ‘OAuth 2.0 Tutorial’ weblink
+    near the bottom of the screen:
 
     ![](./man/figures/application_registered.png)
 
--   Scroll down to the end of **1. Authorize** and **right click** on
-    the provided **authorization URL** (in blue color) to open this URL
-    on a new web browser tab which will show the Fitbit authorization
-    interface. Change the auth period to **1 year** so that you don’t
-    have to go through this too often and tick all options before
-    clicking *Allow* (you will probably play with the other endpoints at
-    some point in the future)
+-   In the ‘Fitbit OAuth 2.0 Tutorial’ website the **Client ID** already
+    exists and we have to copy-paste the **Client Secret** from the
+    previous web page
 
-    ![](./man/figures/one_year_long.png)
+    ![](./man/figures/Server_oauth2.png)
+
+-   then we scroll down to the ‘Getting an Access Token’ section and
+    click to the two “Generate” buttons to generate the required codes,
+
+    ![](./man/figures/getting_access_token.png)
+
+-   In the next section ‘Step 2: Display Authorization Page’ we click to
+    the already created URL which will open a new tab to our web
+    browser,
+
+    ![](./man/figures/display_auth_page.png)
+
+-   in this new web page tick the **Allow All** and click the **Allow**
+    button
+
+    ![](./man/figures/fitbit_data_products.png)
 
 -   After clicking *Allow*, the browser tab redirects to the callback
-    URL. You’ll have to **copy and paste the full URL** which now
-    includes also the **access token** to the **2. Parse response**
-    header of the previous tab (where we have seen also the *1.
-    Authorize* section). The required **access token** for your
-    application that you can use in this package will appear below the
-    text box (it’s a long string of characters).
+    URL. Although this might seem like an “Unable to connect” web page
+    the important thing here is to just copy the URL of the web page as
+    follows,
+
+    ![](./man/figures/unable_to_connect.png)
+
+-   and paste it to the section “Step 3: Handle the Redirect” where the
+    “Authorization code” and “State” will be created,
+
+    ![](./man/figures/step_3_redicrect.png)
+
+-   finally in section “Step 4: Get Tokens” we just click to the
+    **SUBMIT REQUEST** button to receive the token in the **Response**
+    field,
+
+    ![](./man/figures/get_token.png)
 
 <br>
 
-You now have your **token** and can start using the **fitbitViz** R
-package to access and visualize your data.
+The **parsed response** looks as follows,
+
+![](./man/figures/parsed_response.png)
+
+<br>
+
+You now have your **Access Token** and can start using the **fitbitViz**
+R package to access and visualize your data. Keep in mind that the
+*Access token* is **valid for 8 hours**. Based on the documentation of
+the fitbit API
+
+*“After the Access Token expiration time has passed your requests will
+receive a 401 HTTP error. When this happens, your app should use the
+Refresh Token to get a new pair of tokens”*.
+
+To refresh the token the user of the *fitbitViz* R package can use the
+***refresh\_token\_app()*** function, which requires the **client id**,
+**client secret** and **refresh token** of your registered Fitbit
+application, in the following way:
+
+<br>
+
+``` r
+require(fitbitViz)
+
+#..............................................
+# Refresh token once it expires (after 8 hours)
+#..............................................
+
+client_id = 'xxxxxx'
+client_secret = 'xxxxxxxxxxxxxxxxxx'
+refresh_token = 'xxxxxxxxxxxxxxxxxxxxxxxx'
+
+# refresh the token
+new_token = refresh_token_app(client_id = client_id,
+                              client_secret = client_secret,
+                              refresh_token = refresh_token)
+
+# a named list that includes the new 'access_token' and 'refresh_token'
+str(new_token)
+```
 
 <br>
 
 ### Keep track of your activities using ‘fitbitViz’, ‘Blogdown’ and ‘Github Actions’
+
+<br>
+
+**UPDATE 26-12-2022**: The registration of an Application of the *fitbit
+web API* has changed and it seems that users have to refresh the token
+every 8 hours. The following instructions were meant to be used with a
+registered application that wouldn’t require to refresh the token for 1
+year.
 
 <br>
 
@@ -220,7 +287,6 @@ by clicking to a **CSV** button as shown in the next image,
 -   **References**:
     -   <https://registry.opendata.aws/copernicus-dem/>
     -   <https://dev.fitbit.com/build/reference/web-api/>
-    -   <https://obrl-soil.github.io/fitbit-api-r/>
     -   <https://github.com/orchid00/actions_sandbox/issues/41#issuecomment-816970613>
     -   <https://blog--simonpcouch.netlify.app/blog/r-github-actions-commit/>
 
@@ -272,7 +338,7 @@ chmod -R 777 /home/YOUR_DIR
 
 The **USER** defaults to *rstudio* but you have to give your
 **PASSWORD** of preference (see
-[www.rocker-project.org](https://www.rocker-project.org/) for more
+[www.rocker-project.org](https://rocker-project.org/) for more
 information).
 
 <br>
@@ -337,7 +403,7 @@ cite `https://CRAN.R-project.org/package=fitbitViz`:
   title = {{fitbitViz}: Fitbit Visualizations},
   author = {Lampros Mouselimis},
   year = {2022},
-  note = {R package version 1.0.3},
+  note = {R package version 1.0.5},
   url = {https://CRAN.R-project.org/package=fitbitViz},
 }
 ```

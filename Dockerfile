@@ -29,7 +29,11 @@ RUN apt-get update \
                 texlive-science \
                 texlive-xetex
 
-RUN R -e "install.packages(c( 'glue', 'httr', 'jsonlite', 'ggplot2', 'lubridate', 'patchwork', 'data.table', 'stats', 'viridis', 'scales', 'ggthemes', 'varian', 'paletteer', 'XML', 'hms', 'leaflet', 'sf', 'rstudioapi', 'grDevices', 'leafgl', 'rgdal', 'raster', 'terra', 'magrittr', 'rayshader', 'utils', 'CopernicusDEM', 'testthat', 'knitr', 'rmarkdown', 'DT', 'rgl', 'magick', 'remotes' ), repos =  'https://cloud.r-project.org/' )"
+RUN R -e "install.packages(c( 'glue', 'httr', 'jsonlite', 'ggplot2', 'lubridate', 'patchwork', 'data.table', 'stats', 'viridis', 'scales', 'ggthemes', 'varian', 'paletteer', 'XML', 'hms', 'leaflet', 'sf', 'rstudioapi', 'grDevices', 'leafgl', 'base64enc', 'magrittr', 'rayshader', 'utils', 'CopernicusDEM', 'testthat', 'knitr', 'rmarkdown', 'DT', 'rgl', 'magick', 'lifecycle', 'reshape2', 'remotes' ), repos =  'https://cloud.r-project.org/' )"
+
+# I have to install the development versions of 'raster' and 'terra' because I removed the 'rgdal' dependency
+RUN  R -e "remotes::install_github('rspatial/raster', upgrade = 'always', dependencies = TRUE, repos = 'https://cloud.r-project.org/')" && \
+ R -e "remotes::install_github('rspatial/terra', upgrade = 'always', dependencies = TRUE, repos = 'https://cloud.r-project.org/')"
 
 RUN  R -e "remotes::install_github('mlampros/fitbitViz', upgrade = 'always', dependencies = TRUE, repos = 'https://cloud.r-project.org/')" && \
  apt-get autoremove -y && \

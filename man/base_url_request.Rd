@@ -4,7 +4,12 @@
 \alias{base_url_request}
 \title{base function to return the data for the specified activity based on the url}
 \usage{
-base_url_request(url, oauth_token, show_nchar_case_error = 135)
+base_url_request(
+  url,
+  oauth_token,
+  show_nchar_case_error = 135,
+  simplifyVector = TRUE
+)
 }
 \arguments{
 \item{url}{a character string specifying the input url}
@@ -12,6 +17,8 @@ base_url_request(url, oauth_token, show_nchar_case_error = 135)
 \item{oauth_token}{a character string specifying the authentication token}
 
 \item{show_nchar_case_error}{an integer value specifying the number of characters to show in case of an error}
+
+\item{simplifyVector}{a boolean. Coerce JSON arrays containing only primitives into an atomic vector (see the documentation of the jsonlite::fromJSON() function)}
 }
 \value{
 an object of class list

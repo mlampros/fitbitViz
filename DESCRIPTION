@@ -1,8 +1,8 @@
 Package: fitbitViz
 Type: Package
 Title: 'Fitbit' Visualizations
-Version: 1.0.4
-Date: 2022-02-27
+Version: 1.0.5
+Date: 2022-12-26
 Authors@R: c( person(given = "Lampros", family = "Mouselimis", email = "mouselimislampros@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "https://orcid.org/0000-0002-8024-1546")) )
 Maintainer: Lampros Mouselimis <mouselimislampros@gmail.com>
 URL: https://github.com/mlampros/fitbitViz
@@ -31,12 +31,15 @@ Imports:
     sf, 
     rstudioapi,
     grDevices, 
-    leafgl, 
-    raster,
+    leafgl,
+    raster (>= 3.6-3),
     terra,
     magrittr, 
     rayshader,
-    utils
+    utils,
+    base64enc,
+    lifecycle,
+    reshape2
 Suggests: 
     CopernicusDEM,
     testthat (>= 3.0.0),
@@ -44,8 +47,7 @@ Suggests:
     rmarkdown,
     DT,
     rgl,
-    magick,
-    rgdal (>= 1.5-23)
-RoxygenNote: 7.1.2
+    magick
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Config/testthat/edition: 3
