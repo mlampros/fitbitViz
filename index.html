@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">fitbitViz</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@
 </h3>
 <p><br></p>
 <p>To make use of this R package you have first to <strong>register an Application</strong> in <a href="https://dev.fitbit.com/" class="external-link uri">https://dev.fitbit.com/</a>. By registering an application you will receive the Fitbit <strong>token</strong> which besides your existing <a href="https://community.fitbit.com/t5/Web-API-Development/Where-do-I-find-my-User-ID/m-p/1138667/highlight/true#M4375" class="external-link">user-id</a> is required so that you can take advantage of the <strong>fitbitViz</strong> functions.</p>
-<p>There are many resources on the web on how to setup a Fitbit application. I modified the following <a href="https://obrl-soil.github.io/fitbit-api-r/" class="external-link">guide</a> which explains in detail how to register an application and then receive a token to retrieve the Fitbit data for a specific time period (maximum a year). The next images and comments explain the whole process,</p>
+<p>There are many resources on the web on how to setup a Fitbit application. The <a href="https://dev.fitbit.com/build/reference/web-api/" class="external-link">Fitbit web API documenation</a> includes more details. The next images and comments explain the whole process,</p>
 <ul>
 <li>
 <p>Go to <a href="https://dev.fitbit.com/" class="external-link uri">https://dev.fitbit.com/</a> and click on <strong>Manage &gt; Register an App</strong></p>
@@ -99,28 +99,78 @@
 <p><img src="./reference/figures/register_application.png"></p>
 </li>
 <li>
-<p>Once the app is created, click on the ‘OAuth 2.0 tutorial page’ weblink near the bottom of the screen:</p>
+<p>Once the app is created, click on the ‘OAuth 2.0 Tutorial’ weblink near the bottom of the screen:</p>
 <p><img src="./reference/figures/application_registered.png"></p>
 </li>
 <li>
-<p>Scroll down to the end of <strong>1. Authorize</strong> and <strong>right click</strong> on the provided <strong>authorization URL</strong> (in blue color) to open this URL on a new web browser tab which will show the Fitbit authorization interface. Change the auth period to <strong>1 year</strong> so that you don’t have to go through this too often and tick all options before clicking <em>Allow</em> (you will probably play with the other endpoints at some point in the future)</p>
-<p><img src="./reference/figures/one_year_long.png"></p>
+<p>In the ‘Fitbit OAuth 2.0 Tutorial’ website the <strong>Client ID</strong> already exists and we have to copy-paste the <strong>Client Secret</strong> from the previous web page</p>
+<p><img src="./reference/figures/Server_oauth2.png"></p>
 </li>
-<li><p>After clicking <em>Allow</em>, the browser tab redirects to the callback URL. You’ll have to <strong>copy and paste the full URL</strong> which now includes also the <strong>access token</strong> to the <strong>2. Parse response</strong> header of the previous tab (where we have seen also the <em>1. Authorize</em> section). The required <strong>access token</strong> for your application that you can use in this package will appear below the text box (it’s a long string of characters).</p></li>
+<li>
+<p>then we scroll down to the ‘Getting an Access Token’ section and click to the two “Generate” buttons to generate the required codes,</p>
+<p><img src="./reference/figures/getting_access_token.png"></p>
+</li>
+<li>
+<p>In the next section ‘Step 2: Display Authorization Page’ we click to the already created URL which will open a new tab to our web browser,</p>
+<p><img src="./reference/figures/display_auth_page.png"></p>
+</li>
+<li>
+<p>in this new web page tick the <strong>Allow All</strong> and click the <strong>Allow</strong> button</p>
+<p><img src="./reference/figures/fitbit_data_products.png"></p>
+</li>
+<li>
+<p>After clicking <em>Allow</em>, the browser tab redirects to the callback URL. Although this might seem like an “Unable to connect” web page the important thing here is to just copy the URL of the web page as follows,</p>
+<p><img src="./reference/figures/unable_to_connect.png"></p>
+</li>
+<li>
+<p>and paste it to the section “Step 3: Handle the Redirect” where the “Authorization code” and “State” will be created,</p>
+<p><img src="./reference/figures/step_3_redicrect.png"></p>
+</li>
+<li>
+<p>finally in section “Step 4: Get Tokens” we just click to the <strong>SUBMIT REQUEST</strong> button to receive the token in the <strong>Response</strong> field,</p>
+<p><img src="./reference/figures/get_token.png"></p>
+</li>
 </ul>
 <p><br></p>
-<p>You now have your <strong>token</strong> and can start using the <strong>fitbitViz</strong> R package to access and visualize your data.</p>
+<p>The <strong>parsed response</strong> looks as follows,</p>
+<p><img src="./reference/figures/parsed_response.png"></p>
+<p><br></p>
+<p>You now have your <strong>Access Token</strong> and can start using the <strong>fitbitViz</strong> R package to access and visualize your data. Keep in mind that the <em>Access token</em> is <strong>valid for 8 hours</strong>. Based on the documentation of the fitbit API</p>
+<p><em>“After the Access Token expiration time has passed your requests will receive a 401 HTTP error. When this happens, your app should use the Refresh Token to get a new pair of tokens”</em>.</p>
+<p>To refresh the token the user of the <em>fitbitViz</em> R package can use the <strong><em>refresh_token_app()</em></strong> function, which requires the <strong>client id</strong>, <strong>client secret</strong> and <strong>refresh token</strong> of your registered Fitbit application, in the following way:</p>
+<p><br></p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlampros/fitbitViz" class="external-link">fitbitViz</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#..............................................</span></span>
+<span><span class="co"># Refresh token once it expires (after 8 hours)</span></span>
+<span><span class="co">#..............................................</span></span>
+<span></span>
+<span><span class="va">client_id</span> <span class="op">=</span> <span class="st">'xxxxxx'</span></span>
+<span><span class="va">client_secret</span> <span class="op">=</span> <span class="st">'xxxxxxxxxxxxxxxxxx'</span></span>
+<span><span class="va">refresh_token</span> <span class="op">=</span> <span class="st">'xxxxxxxxxxxxxxxxxxxxxxxx'</span></span>
+<span></span>
+<span><span class="co"># refresh the token</span></span>
+<span><span class="va">new_token</span> <span class="op">=</span> <span class="fu"><a href="reference/refresh_token_app.html">refresh_token_app</a></span><span class="op">(</span>client_id <span class="op">=</span> <span class="va">client_id</span>,</span>
+<span>                              client_secret <span class="op">=</span> <span class="va">client_secret</span>,</span>
+<span>                              refresh_token <span class="op">=</span> <span class="va">refresh_token</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># a named list that includes the new 'access_token' and 'refresh_token'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_token</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="keep-track-of-your-activities-using-fitbitviz-blogdown-and-github-actions">Keep track of your activities using ‘fitbitViz’, ‘Blogdown’ and ‘Github Actions’<a class="anchor" aria-label="anchor" href="#keep-track-of-your-activities-using-fitbitviz-blogdown-and-github-actions"></a>
 </h3>
 <p><br></p>
+<p><strong>UPDATE 26-12-2022</strong>: The registration of an Application of the <em>fitbit web API</em> has changed and it seems that users have to refresh the token every 8 hours. The following instructions were meant to be used with a registered application that wouldn’t require to refresh the token for 1 year.</p>
+<p><br></p>
 <p>The functions of the <strong>fitbitViz</strong> R package can be used in an automatic way so that the user can keep track of the <strong>Visualizations</strong> and <strong>data</strong> over time.</p>
 <p>From the first moment I’ve started implementing the <strong>fitbitViz</strong> R package this is what I actually had in my mind. You can have a look to <a href="https://mlampros.github.io/fitbitVizBlog/" class="external-link">my Fitbit Visualizations website</a>. The following steps explain in detail how this can be achieved:</p>
 <ul>
 <li>Fork the <a href="https://github.com/mlampros/fitbitVizBlog" class="external-link">fitbitVizBlog</a> repository ( <strong>!!! Not this repository but the one that includes the blog posts !!!</strong> )</li>
-<li>Create the following <strong>secrets</strong> required for the <a href="https://github.com/mlampros/fitbitVizBlog/blob/master/.github/workflows/gh_fitbit_blog.yaml" class="external-link">.github/workflows/gh_fitbit_blog.yaml</a> file by navigating to <strong>Settings</strong> &gt;&gt; <strong>secrets</strong> (<em>be aware that the <strong>AWS_ACCESS_KEY_ID</strong> and <strong>AWS_SECRET_ACCESS_KEY</strong> are optional and required only if you want to receive the <strong>3-dimensional</strong> Rayshader Visualization</em>)<ul>
+<li>Create the following <strong>secrets</strong> required for the <a href="https://github.com/mlampros/fitbitVizBlog/blob/master/.github/workflows/gh_fitbit_blog.yaml" class="external-link">.github/workflows/gh_fitbit_blog.yaml</a> file by navigating to <strong>Settings</strong> &gt;&gt; <strong>secrets</strong> (<em>be aware that the <strong>AWS_ACCESS_KEY_ID</strong> and <strong>AWS_SECRET_ACCESS_KEY</strong> are optional and required only if you want to receive the <strong>3-dimensional</strong> Rayshader Visualization</em>)
+<ul>
 <li>
 <strong>USER_ID</strong>: click on ‘New repository secret’ and use <strong>USER_ID</strong> as <strong>Name</strong> and your Fitbit <a href="https://community.fitbit.com/t5/Web-API-Development/Where-do-I-find-my-User-ID/m-p/1138667/highlight/true#M4375" class="external-link">user-id</a> as <strong>Value</strong>
 </li>
@@ -142,9 +192,15 @@
 </ul>
 <p>What it remains is to modify the <a href="https://github.com/mlampros/fitbitVizBlog/blob/master/.github/workflows/gh_fitbit_blog.yaml" class="external-link">.github/workflows/gh_fitbit_blog.yaml</a> file to adjust the</p>
 <ul>
-<li>current <strong>cron-job</strong> settings which runs every Sunday at 23:00 pm<ul><li><img src="./reference/figures/cron_job_setup.png"></li></ul>
+<li>current <strong>cron-job</strong> settings which runs every Sunday at 23:00 pm
+<ul>
+<li><img src="./reference/figures/cron_job_setup.png"></li>
+</ul>
 </li>
-<li>current <strong>fitbitViz</strong> parameters<ul><li><img src="./reference/figures/fitbit_parameters.png"></li></ul>
+<li>current <strong>fitbitViz</strong> parameters
+<ul>
+<li><img src="./reference/figures/fitbit_parameters.png"></li>
+</ul>
 </li>
 </ul>
 <p>Regarding the <strong>fitbitViz</strong> parameters (<a href="https://github.com/mlampros/fitbitVizBlog/blob/master/.github/workflows/gh_fitbit_blog.yaml" class="external-link">.github/workflows/gh_fitbit_blog.yaml</a> file) at it’s current state the application takes:</p>
@@ -158,8 +214,9 @@
 <li>
 <strong>sleep_time_ends</strong>: this is your scheduled wake up time in form of a <strong>lubridate::hms(“08H 00M 0S”)</strong> object (adjust the input depending on your wake up time)</li>
 <li>
-<strong>asc_desc_linestring</strong>: this parameter is related to the GPS data of the <strong>3-dimensional</strong> map especially if you keep track of your outdoor activities. There are <strong>3 options</strong> but before making use of the <strong>2nd. option make sure</strong> that there is an ascending and descending route, otherwise it will give an error:<ol style="list-style-type: decimal">
-<li>by specifying <strong>asc_desc_linestring="";</strong> a single LINESTRING will be created based on the GPS data using a single color</li>
+<strong>asc_desc_linestring</strong>: this parameter is related to the GPS data of the <strong>3-dimensional</strong> map especially if you keep track of your outdoor activities. There are <strong>3 options</strong> but before making use of the <strong>2nd. option make sure</strong> that there is an ascending and descending route, otherwise it will give an error:
+<ol style="list-style-type: decimal">
+<li>by specifying <strong>asc_desc_linestring=““;</strong> a single LINESTRING will be created based on the GPS data using a single color</li>
 <li>by specifying <strong>asc_desc_linestring=“TRUE”;</strong> the LINESTRING of the GPS data will be split into 2 parts using the highest elevation location as a split point (<strong>blue</strong> color for the ascending part and <strong>red</strong> color for the descending part)</li>
 <li>by specifying <strong>asc_desc_linestring=“17H 5M 0S”;</strong> the GPS data will be split into 2 parts using this input time as split point (adjust the time based on your data)</li>
 </ol>
@@ -185,15 +242,17 @@
 <p><br></p>
 <p><img src="./reference/figures/csv_button.png"></p>
 <p><br></p>
-<ul><li>
-<strong>References</strong>:<ul>
+<ul>
+<li>
+<strong>References</strong>:
+<ul>
 <li><a href="https://registry.opendata.aws/copernicus-dem/" class="external-link uri">https://registry.opendata.aws/copernicus-dem/</a></li>
 <li><a href="https://dev.fitbit.com/build/reference/web-api/" class="external-link uri">https://dev.fitbit.com/build/reference/web-api/</a></li>
-<li><a href="https://obrl-soil.github.io/fitbit-api-r/" class="external-link uri">https://obrl-soil.github.io/fitbit-api-r/</a></li>
 <li><a href="https://github.com/orchid00/actions_sandbox/issues/41#issuecomment-816970613" class="external-link uri">https://github.com/orchid00/actions_sandbox/issues/41#issuecomment-816970613</a></li>
 <li><a href="https://blog--simonpcouch.netlify.app/blog/r-github-actions-commit/" class="external-link uri">https://blog--simonpcouch.netlify.app/blog/r-github-actions-commit/</a></li>
 </ul>
-</li></ul>
+</li>
+</ul>
 <p><br></p>
 </div>
 <div class="section level3">
@@ -202,29 +261,29 @@
 <p><br></p>
 <p><strong>Docker images</strong> of the <em>fitbitViz</em> package are available to download from my <a href="https://hub.docker.com/r/mlampros/fitbitviz" class="external-link">dockerhub</a> account. The images come with <em>Rstudio</em> and the <em>R-development</em> version (latest) installed. The whole process was tested on Ubuntu 18.04. To <strong>pull</strong> &amp; <strong>run</strong> the image do the following,</p>
 <p><br></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>docker pull mlampros<span class="op">/</span>fitbitviz<span class="op">:</span>rstudiodev</span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a>docker run <span class="op">-</span>d <span class="op">--</span>name rstudio_dev <span class="op">-</span>e USER=rstudio <span class="op">-</span>e PASSWORD=give_here_your_password <span class="op">--</span>rm <span class="op">-</span>p <span class="dv">8787</span><span class="op">:</span><span class="dv">8787</span> mlampros<span class="op">/</span>fitbitviz<span class="op">:</span>rstudiodev</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>docker pull mlampros<span class="sc">/</span>fitbitviz<span class="sc">:</span>rstudiodev</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>docker run <span class="sc">-</span>d <span class="sc">--</span>name rstudio_dev <span class="sc">-</span>e USER<span class="ot">=</span>rstudio <span class="sc">-</span>e PASSWORD<span class="ot">=</span>give_here_your_password <span class="sc">--</span>rm <span class="sc">-</span>p <span class="dv">8787</span><span class="sc">:</span><span class="dv">8787</span> mlampros<span class="sc">/</span>fitbitviz<span class="sc">:</span>rstudiodev</span></code></pre></div>
 <p><br></p>
 <p>The user can also <strong>bind</strong> a home directory / folder to the image to use its files by specifying the <strong>-v</strong> command,</p>
 <p><br></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>docker run <span class="op">-</span>d <span class="op">--</span>name rstudio_dev <span class="op">-</span>e USER=rstudio <span class="op">-</span>e PASSWORD=give_here_your_password <span class="op">--</span>rm <span class="op">-</span>p <span class="dv">8787</span><span class="op">:</span><span class="dv">8787</span> <span class="op">-</span>v <span class="op">/</span>home<span class="op">/</span>YOUR_DIR<span class="op">:</span><span class="er">/</span>home<span class="op">/</span>rstudio<span class="op">/</span>YOUR_DIR mlampros<span class="op">/</span>fitbitviz<span class="op">:</span>rstudiodev</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>docker run <span class="sc">-</span>d <span class="sc">--</span>name rstudio_dev <span class="sc">-</span>e USER<span class="ot">=</span>rstudio <span class="sc">-</span>e PASSWORD<span class="ot">=</span>give_here_your_password <span class="sc">--</span>rm <span class="sc">-</span>p <span class="dv">8787</span><span class="sc">:</span><span class="dv">8787</span> <span class="sc">-</span>v <span class="sc">/</span>home<span class="sc">/</span>YOUR_DIR<span class="sc">:</span><span class="er">/</span>home<span class="sc">/</span>rstudio<span class="sc">/</span>YOUR_DIR mlampros<span class="sc">/</span>fitbitviz<span class="sc">:</span>rstudiodev</span></code></pre></div>
 <p><br></p>
 <p>In the latter case you might have first give permission privileges for write access to <strong>YOUR_DIR</strong> directory (not necessarily) using,</p>
 <p><br></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>chmod <span class="op">-</span>R <span class="dv">777</span> <span class="op">/</span>home<span class="op">/</span>YOUR_DIR</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>chmod <span class="sc">-</span>R <span class="dv">777</span> <span class="sc">/</span>home<span class="sc">/</span>YOUR_DIR</span></code></pre></div>
 <p><br></p>
-<p>The <strong>USER</strong> defaults to <em>rstudio</em> but you have to give your <strong>PASSWORD</strong> of preference (see <a href="https://www.rocker-project.org/" class="external-link">www.rocker-project.org</a> for more information).</p>
+<p>The <strong>USER</strong> defaults to <em>rstudio</em> but you have to give your <strong>PASSWORD</strong> of preference (see <a href="https://rocker-project.org/" class="external-link">www.rocker-project.org</a> for more information).</p>
 <p><br></p>
 <p>Open your web-browser and depending where the docker image was <em>build / run</em> give,</p>
 <p><br></p>
 <p><strong>1st. Option</strong> on your personal computer,</p>
 <p><br></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>http<span class="op">:</span><span class="er">//</span><span class="dv">0</span>.<span class="dv">0</span>.<span class="fl">0.0</span><span class="op">:</span><span class="dv">8787</span> </span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>http<span class="sc">:</span><span class="er">//</span><span class="dv">0</span>.<span class="dv">0</span>.<span class="fl">0.0</span><span class="sc">:</span><span class="dv">8787</span> </span></code></pre></div>
 <p><br></p>
 <p><strong>2nd. Option</strong> on a cloud instance,</p>
 <p><br></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>http<span class="op">:</span><span class="er">//</span>Public DNS<span class="op">:</span><span class="dv">8787</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>http<span class="sc">:</span><span class="er">//</span>Public DNS<span class="sc">:</span><span class="dv">8787</span></span></code></pre></div>
 <p><br></p>
 <p>to access the Rstudio console in order to give your username and password.</p>
 <p><br></p>
@@ -234,22 +293,22 @@
 </h3>
 <p><br></p>
 <p>To install the package from CRAN use,</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"fitbitViz"</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 <p>and to download the latest version of the package from Github,</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'mlampros/fitbitViz'</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 <p>If you use the <strong>fitbitViz</strong> R package in your paper or research please cite <code>https://CRAN.R-project.org/package=fitbitViz</code>:</p>
 <p><br></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="op">@</span>Manual{,</span>
-<span id="cb8-2"><a href="#cb8-2"></a>  title =<span class="st"> </span>{{fitbitViz}<span class="op">:</span><span class="st"> </span>Fitbit Visualizations},</span>
-<span id="cb8-3"><a href="#cb8-3"></a>  author =<span class="st"> </span>{Lampros Mouselimis},</span>
-<span id="cb8-4"><a href="#cb8-4"></a>  year =<span class="st"> </span>{<span class="dv">2022</span>},</span>
-<span id="cb8-5"><a href="#cb8-5"></a>  note =<span class="st"> </span>{R package version <span class="dv">1</span>.<span class="fl">0.3</span>},</span>
-<span id="cb8-6"><a href="#cb8-6"></a>  url =<span class="st"> </span>{https<span class="op">:</span><span class="er">//</span>CRAN.R<span class="op">-</span>project.org<span class="op">/</span>package=fitbitViz},</span>
-<span id="cb8-7"><a href="#cb8-7"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="sc">@</span>Manual{,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  title <span class="ot">=</span> {{fitbitViz}<span class="sc">:</span> Fitbit Visualizations},</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  author <span class="ot">=</span> {Lampros Mouselimis},</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  year <span class="ot">=</span> {<span class="dv">2022</span>},</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  note <span class="ot">=</span> {R package version <span class="dv">1</span>.<span class="fl">0.5</span>},</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">=</span> {https<span class="sc">:</span><span class="er">//</span>CRAN.R<span class="sc">-</span>project.org<span class="sc">/</span>package<span class="ot">=</span>fitbitViz},</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p><br></p>
 </div>
 </div>
@@ -311,7 +370,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

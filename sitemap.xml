@@ -37,6 +37,9 @@
     <loc>/reference/extract_LOG_ID.html</loc>
   </url>
   <url>
+    <loc>/reference/fitbit_data_type_by_date.html</loc>
+  </url>
+  <url>
     <loc>/reference/ggplot_each_date.html</loc>
   </url>
   <url>
@@ -61,7 +64,13 @@
     <loc>/reference/leafGL_point_coords.html</loc>
   </url>
   <url>
+    <loc>/reference/plot_data_type.html</loc>
+  </url>
+  <url>
     <loc>/reference/rayshader_3d_DEM.html</loc>
+  </url>
+  <url>
+    <loc>/reference/refresh_token_app.html</loc>
   </url>
   <url>
     <loc>/reference/sleep_heatmap.html</loc>
