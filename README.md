@@ -155,9 +155,9 @@ str(new_token)
 
 **UPDATE 26-12-2022**: The registration of an Application of the *fitbit
 web API* has changed and it seems that users have to refresh the token
-every 8 hours. The following instructions were meant to be used with a
-registered application that wouldn’t require to refresh the token for 1
-year.
+every **8 hours**. The following instructions were meant to be used with
+a registered application that wouldn’t require to refresh the token for
+**1 year**.
 
 <br>
 

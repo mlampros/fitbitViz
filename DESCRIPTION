@@ -2,7 +2,7 @@ Package: fitbitViz
 Type: Package
 Title: 'Fitbit' Visualizations
 Version: 1.0.5
-Date: 2022-12-26
+Date: 2023-01-06
 Authors@R: c( person(given = "Lampros", family = "Mouselimis", email = "mouselimislampros@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "https://orcid.org/0000-0002-8024-1546")) )
 Maintainer: Lampros Mouselimis <mouselimislampros@gmail.com>
 URL: https://github.com/mlampros/fitbitViz
