@@ -333,15 +333,6 @@ refresh_token_app = function(client_id,
 
 
 
-#' Refresh Token of an existing application
-#'
-#' @param client_id a character string specifying the 'client_id' of the registered (existing) Fitbit application
-#' @param client_secret a character string specifying the 'client_secret' of the registered (existing) Fitbit application
-#' @param refresh_token a character string specifying the 'refresh_token' of the registered (existing) Fitbit application
-#' @return a named list that includes access_token, expires_in, refresh_token, scope, token_type, user_id
-#'
-#' @details
-#'
 #' This plot function is used in the 'fitbit_data_type_by_date' internally to plot the 'spo2' and 'hrv' data types
 #'
 #' @keywords internal

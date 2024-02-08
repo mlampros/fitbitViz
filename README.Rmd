@@ -183,7 +183,6 @@ The order to *modify*, *debug* or *include new code / functions* to the files of
     * https://registry.opendata.aws/copernicus-dem/
     * https://dev.fitbit.com/build/reference/web-api/
     * https://github.com/orchid00/actions_sandbox/issues/41#issuecomment-816970613
-    * https://blog--simonpcouch.netlify.app/blog/r-github-actions-commit/
 
 <br>
 
@@ -296,7 +295,7 @@ If you use the **fitbitViz** R package in your paper or research please cite `ht
   title = {{fitbitViz}: Fitbit Visualizations},
   author = {Lampros Mouselimis},
   year = {2022},
-  note = {R package version 1.0.5},
+  note = {R package version 1.0.6},
   url = {https://CRAN.R-project.org/package=fitbitViz},
 }
 ```

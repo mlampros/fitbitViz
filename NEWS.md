@@ -1,4 +1,9 @@
 
+## fitbitViz 1.0.6
+
+* I fixed a CRAN error
+* I removed a broken URL
+
 
 ## fitbitViz 1.0.5
 
