@@ -356,7 +356,7 @@ plot_data_type = function(dat_type_min, type) {
     ggplot2::ylab(type) +
     ggplot2::xlab("Hour & Minutes") +
     ggplot2::ggtitle(glue::glue("{ylab_name} ('{type}')")) +
-    ggplot2::theme(plot.title = ggplot2::element_text(size = "16", hjust = 0.5, face = "bold", colour = "blue"),
+    ggplot2::theme(plot.title = ggplot2::element_text(size = 16, hjust = 0.5, face = "bold", colour = "blue"),
                    strip.background = ggplot2::element_rect(fill = 'blue', colour='black'),
                    strip.text.x = ggplot2::element_text(size = 16, colour = 'orange', face = 'bold'),
                    axis.title.x = ggplot2::element_text(size = 12, face = "bold", colour = "blue"),
@@ -596,7 +596,7 @@ heart_rate_heatmap = function(heart_rate_intraday_data,
     ggplot2::ylab("Level") +
     ggplot2::ggtitle("Heart Rate Level Heatmap") +
     ggplot2::theme(strip.placement = 'outside',
-                   plot.title = ggplot2::element_text(size = "16", hjust = 0.5, face = "bold", colour = "blue"),
+                   plot.title = ggplot2::element_text(size = 16, hjust = 0.5, face = "bold", colour = "blue"),
                    axis.title.x = ggplot2::element_text(size = 12, face = "bold", colour = "blue"),
                    axis.title.y = ggplot2::element_text(size = 12, face = "bold", colour = "blue"),
                    axis.text.x = ggplot2::element_text(size = 12, face = "bold", colour = "black", angle = angle_x_axis, vjust = 1.0, hjust = 1.0),
@@ -714,7 +714,7 @@ heart_rate_variability_sleep_time = function(heart_rate_data,
       ggplot2::labs(color='Heart Rate Variability (during sleep') +
       ggplot2::geom_point(color = 'green', size = 3) +
       ggplot2::geom_text(ggplot2::aes(label = round(hr_var$hr_variability, 3), fontface = 2), color = "maroon", size = 4, vjust = -2) +
-      ggplot2::theme(plot.title = ggplot2::element_text(size = "16", hjust = 0.5, face = "bold", colour = "blue"),
+      ggplot2::theme(plot.title = ggplot2::element_text(size = 16, hjust = 0.5, face = "bold", colour = "blue"),
                      axis.title.x = ggplot2::element_text(size = 12, face = "bold", colour = "blue"),
                      axis.title.y = ggplot2::element_text(size = 12, face = "bold", colour = "blue"),
                      axis.text.x = ggplot2::element_text(size = 12, face = "bold", colour = "black", angle = angle_x_axis, vjust = 1, hjust=1),
@@ -925,7 +925,7 @@ sleep_heatmap = function(level_data,
     ggplot2::ylab("Level") +
     ggplot2::ggtitle("Sleep Level Heatmap (Minutes & Percentage of sleep)") +
     ggplot2::theme(strip.placement = 'outside',
-                   plot.title = ggplot2::element_text(size = "16", hjust = 0.5, face = "bold", colour = "blue"),
+                   plot.title = ggplot2::element_text(size = 16, hjust = 0.5, face = "bold", colour = "blue"),
                    axis.title.x = ggplot2::element_text(size = 12, face = "bold", colour = "blue"),
                    axis.title.y = ggplot2::element_text(size = 12, face = "bold", colour = "blue"),
                    axis.text.x = ggplot2::element_text(size = 12, face = "bold", colour = "black", angle = angle_x_axis, vjust = 1.0, hjust = 1.0),
