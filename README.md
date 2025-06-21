@@ -401,7 +401,7 @@ cite `https://CRAN.R-project.org/package=fitbitViz`:
   title = {{fitbitViz}: Fitbit Visualizations},
   author = {Lampros Mouselimis},
   year = {2022},
-  note = {R package version 1.0.6},
+  note = {R package version 1.0.7},
   url = {https://CRAN.R-project.org/package=fitbitViz},
 }
 ```

@@ -1,4 +1,9 @@
 
+## fitbitViz 1.0.7
+
+* The code base was updated based on [pull request 9](https://github.com/mlampros/fitbitViz/pull/9). In fitbitViz an element property was declared as text, whereas the latest version of ggplot2 expected a numeric value.
+
+
 ## fitbitViz 1.0.6
 
 * I fixed a CRAN error

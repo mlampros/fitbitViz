@@ -1,8 +1,8 @@
 Package: fitbitViz
 Type: Package
 Title: 'Fitbit' Visualizations
-Version: 1.0.6
-Date: 2024-02-08
+Version: 1.0.7
+Date: 2025-06-21
 Authors@R: c( person(given = "Lampros", family = "Mouselimis", email = "mouselimislampros@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "https://orcid.org/0000-0002-8024-1546")) )
 Maintainer: Lampros Mouselimis <mouselimislampros@gmail.com>
 URL: https://github.com/mlampros/fitbitViz
@@ -48,6 +48,6 @@ Suggests:
     DT,
     rgl,
     magick
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 Config/testthat/edition: 3
