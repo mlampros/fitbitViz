@@ -1,10 +1,5 @@
 # Functionality of the fitbitViz R package
 
-    ## Warning in rgl.init(initValue, onlyNULL): RGL: unable to open X11 display
-
-    ## Warning: 'rgl.init' failed, will use the null device.
-    ## See '?rgl.useNULL' for ways to avoid this warning.
-
   
 
 The purpose of this Vignette is to show the main functionality of the
