@@ -769,7 +769,7 @@ sleep_heatmap <- function(level_data,
 #'
 #' require(fitbitViz)
 #'
-#' # 'sleep_data_list' is a named list (names = dates "YYYY-MM-DD") 
+#' # 'sleep_data_list' is a named list (names = dates "YYYY-MM-DD")
 #' # of parsed Fitbit sleep endpoint responses
 #'
 #' sleep_ts <- sleep_time_series(
@@ -1491,7 +1491,6 @@ gps_lat_lon_to_LINESTRING <- function(dat_gps_tcx,
 #' @importFrom sf st_bbox
 #' @importFrom glue glue
 #' @importFrom raster extent
-#' @importFrom rayshader raster_to_matrix sphere_shade add_water add_shadow detect_water ray_shade add_overlay generate_line_overlay plot_3d render_label
 #'
 #' @examples
 #' \dontrun{
@@ -1629,6 +1628,9 @@ rayshader_3d_DEM <- function(rst_buf,
                              windowsize = c(1600, 1000),
                              add_shadow_rescale_original = FALSE,
                              verbose = FALSE) {
+  if (!requireNamespace("rayshader", quietly = TRUE)) {
+    stop("The 'rayshader' package is required for this function. Install it with: install.packages('rayshader')", call. = FALSE)
+  }
   elevation_aoi <- rayshader::raster_to_matrix(raster = rst_buf, verbose = verbose)
   rayshade_3d <- rayshader::sphere_shade(heightmap = elevation_aoi, zscale = 0.95, texture = "desert", progbar = verbose)
   rayshade_3d <- rayshader::add_water(hillshade = rayshade_3d, watermap = rayshader::detect_water(elevation_aoi), color = "desert")

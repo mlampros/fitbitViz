@@ -31,7 +31,6 @@ Imports:
     raster (>= 3.6-3),
     terra,
     magrittr, 
-    rayshader,
     utils,
     lifecycle,
     reshape2
@@ -42,6 +41,7 @@ Suggests:
     rmarkdown,
     DT,
     rgl,
+    rayshader,
     magick
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
