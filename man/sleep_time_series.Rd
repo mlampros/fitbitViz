@@ -36,7 +36,8 @@ Sleep Data Time Series
 
 require(fitbitViz)
 
-# 'sleep_data_list' is a named list (names = dates "YYYY-MM-DD") of parsed Fitbit sleep endpoint responses
+# 'sleep_data_list' is a named list (names = dates "YYYY-MM-DD") 
+# of parsed Fitbit sleep endpoint responses
 
 sleep_ts <- sleep_time_series(
   sleep_data_list = sleep_data_list,
