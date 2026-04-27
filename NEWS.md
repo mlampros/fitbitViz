@@ -1,4 +1,18 @@
 
+## fitbitViz 1.0.8
+
+* **Breaking change — Fitbit Web API dependency removed.** All functions that previously required a `user_id` and `token` have been refactored to accept pre-downloaded data directly, eliminating the dependency on `httr`, `jsonlite`, and `base64enc`. This change was driven by recurring Fitbit API policy changes (GitHub issues [#4](https://github.com/mlampros/fitbitViz/issues/4), [#5](https://github.com/mlampros/fitbitViz/issues/5), [#7](https://github.com/mlampros/fitbitViz/issues/7), [#8](https://github.com/mlampros/fitbitViz/issues/8), [#11](https://github.com/mlampros/fitbitViz/issues/11)).
+* **Removed functions:** `base_url_request()`, `refresh_token_app()`, `extract_LOG_ID()` — these were API-only helpers with no visualization logic.
+* **Refactored functions** (new first parameter accepts pre-downloaded data instead of API credentials):
+  * `heart_rate_time_series(heart_rate_intraday_list, heart_rate = NULL, ...)` — accepts a named list of intraday data.tables
+  * `fitbit_data_type_by_date(data, type = 'spo2', ...)` — accepts the parsed JSON response for that date/type
+  * `sleep_single_day(sleep_data, date, ...)` — accepts the parsed sleep API response
+  * `sleep_time_series(sleep_data_list, ...)` — accepts a named list of per-date sleep responses
+  * `GPS_TCX_data(tcx_file, time_zone, ...)` — accepts a path to an exported `.tcx` file
+* **Sample data:** The `inst/tests_vignette_rds/` folder ships `.RDS` files (`heart_dat.RDS`, `sleep_ts.RDS`, `res_tcx.RDS`) that illustrate the expected input structure for each refactored function.
+* Users who need the previous API-based version can install it with `remotes::install_github("mlampros/fitbitViz@v1.0.7")` or from the CRAN archive at `https://cran.r-project.org/src/contrib/Archive/fitbitViz/fitbitViz_1.0.7.tar.gz`.
+
+
 ## fitbitViz 1.0.7
 
 * The code base was updated based on [pull request 9](https://github.com/mlampros/fitbitViz/pull/9). In fitbitViz an element property was declared as text, whereas the latest version of ggplot2 expected a numeric value.

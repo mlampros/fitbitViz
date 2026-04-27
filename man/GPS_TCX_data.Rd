@@ -4,20 +4,12 @@
 \alias{GPS_TCX_data}
 \title{The GPS-TCX data as a formated data.table}
 \usage{
-GPS_TCX_data(
-  log_id,
-  user_id,
-  token,
-  time_zone = "Europe/Athens",
-  verbose = FALSE
-)
+GPS_TCX_data(tcx_file, time_zone = "Europe/Athens", verbose = FALSE)
 }
 \arguments{
-\item{log_id}{the returned log-id of the 'extract_LOG_ID()' function}
-
-\item{user_id}{a character string specifying the encoded ID of the user. For instance '99xxxx' of the following URL 'https://www.fitbit.com/user/99xxxx' of the user's account corresponds to the 'user_id'}
-
-\item{token}{a character string specifying the secret token that a user receives when registers a new application in https://dev.fitbit.com/apps}
+\item{tcx_file}{a character string specifying the path to a TCX file exported from the Fitbit app or website.
+TCX (Training Center XML) files can be exported from the Fitbit website under account settings or from the
+Fitbit app by sharing a specific activity.}
 
 \item{time_zone}{a character string specifying the time zone parameter ('tz') as is defined in the 'lubridate::ymd_hms()' function}
 
@@ -30,36 +22,18 @@ either NULL or an object of class data.table
 The GPS-TCX data as a formated data.table
 }
 \examples{
-
 \dontrun{
 
 require(fitbitViz)
 
-#............................
-# first extract the log-id(s)
-#............................
+# export the TCX file from the Fitbit website or app for the desired activity
+# then pass the file path to GPS_TCX_data()
 
-USER_ID = '99xxxx'
-token = 'my_long_web_api_token'
-
-log_id = extract_LOG_ID(user_id = USER_ID,
-                        token = token,
-                        after_Date = '2021-03-13',
-                        limit = 10,
-                        sort = 'asc',
-                        verbose = TRUE)
-str(log_id)
-
-#...................................
-# then return the gps-ctx data.table
-#...................................
-
-res_tcx = GPS_TCX_data(log_id = log_id,
-                       user_id = USER_ID,
-                       token = token,
-                       time_zone = 'Europe/Athens',
-                       verbose = TRUE)
+res_tcx <- GPS_TCX_data(
+  tcx_file = "/path/to/activity.tcx",
+  time_zone = "Europe/Athens",
+  verbose = TRUE
+)
 str(res_tcx)
-
 }
 }

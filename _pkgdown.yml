@@ -1,0 +1,6 @@
+url: https://mlampros.github.io/fitbitViz/
+
+template:
+  bootstrap: 5
+  bootswatch: cerulean
+

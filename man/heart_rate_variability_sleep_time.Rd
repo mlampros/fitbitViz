@@ -39,40 +39,42 @@ This function calculates the root mean square of successive differences (RMSSD) 
 Based on the Fitbit application information weblink and the Wikipedia article (https://en.wikipedia.org/wiki/Heart_rate_variability) the heart rate variability is computed normally in ms (milliseconds)
 }
 \examples{
-
 \dontrun{
 
 require(fitbitViz)
 
-#...........................................
+# ...........................................
 # first compute the heart rate intraday data
-#...........................................
+# ...........................................
 
-USER_ID = '99xxxx'
-token = 'my_long_web_api_token'
+USER_ID <- "99xxxx"
+token <- "my_long_web_api_token"
 
-heart_dat = heart_rate_time_series(user_id = USER_ID,
-                                   token = token,
-                                   date_start = '2021-03-09',
-                                   date_end = '2021-03-16',
-                                   time_start = '00:00',
-                                   time_end = '23:59',
-                                   detail_level = '1min',
-                                   ggplot_intraday = TRUE,
-                                   verbose = TRUE,
-                                   show_nchar_case_error = 135)
+heart_dat <- heart_rate_time_series(
+  user_id = USER_ID,
+  token = token,
+  date_start = "2021-03-09",
+  date_end = "2021-03-16",
+  time_start = "00:00",
+  time_end = "23:59",
+  detail_level = "1min",
+  ggplot_intraday = TRUE,
+  verbose = TRUE,
+  show_nchar_case_error = 135
+)
 
-#.......................
+# .......................
 # heart rate variability
-#.......................
+# .......................
 
-hrt_rt_var = heart_rate_variability_sleep_time(heart_rate_data = heart_dat,
-                                               sleep_begin = "00H 40M 0S",
-                                               sleep_end = "08H 00M 0S",
-                                               ggplot_hr_var = TRUE,
-                                               angle_x_axis = 25)
+hrt_rt_var <- heart_rate_variability_sleep_time(
+  heart_rate_data = heart_dat,
+  sleep_begin = "00H 40M 0S",
+  sleep_end = "08H 00M 0S",
+  ggplot_hr_var = TRUE,
+  angle_x_axis = 25
+)
 
 hrt_rt_var
-
 }
 }

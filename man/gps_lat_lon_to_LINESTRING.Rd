@@ -30,54 +30,40 @@ Convert the GPS, TCX data to a LINESTRING
 Separate the Ascending and Descending coordinate points into 2 groups and give a different color to the Ascending and Descending routes
 }
 \examples{
-
 \dontrun{
 
 require(fitbitViz)
 
-#............................
-# first extract the log-id(s)
-#............................
+# export the TCX file from the Fitbit website or app for the desired activity
 
-USER_ID = '99xxxx'
-token = 'my_long_web_api_token'
-
-log_id = extract_LOG_ID(user_id = USER_ID,
-                        token = token,
-                        after_Date = '2021-03-13',
-                        limit = 10,
-                        sort = 'asc',
-                        verbose = TRUE)
-str(log_id)
-
-#...................................
-# then return the gps-ctx data.table
-#...................................
-
-res_tcx = GPS_TCX_data(log_id = log_id,
-                       user_id = USER_ID,
-                       token = token,
-                       time_zone = 'Europe/Athens',
-                       verbose = TRUE)
+res_tcx <- GPS_TCX_data(
+  tcx_file = "/path/to/activity.tcx",
+  time_zone = "Europe/Athens",
+  verbose = TRUE
+)
 str(res_tcx)
 
 
-#..................................................................
+# ..................................................................
 # By using using the maximum altitude as a split point of the route
-#..................................................................
+# ..................................................................
 
-linestring_dat_init = gps_lat_lon_to_LINESTRING(dat_gps_tcx = res_tcx,
-                                                CRS = 4326,
-                                                time_split_asc_desc = NULL,
-                                                verbose = TRUE)
+linestring_dat_init <- gps_lat_lon_to_LINESTRING(
+  dat_gps_tcx = res_tcx,
+  CRS = 4326,
+  time_split_asc_desc = NULL,
+  verbose = TRUE
+)
 
-#.................................................................
+# .................................................................
 # By using a customized split of the route (ascending, descending)
-#.................................................................
+# .................................................................
 
-linestring_dat_lubr = gps_lat_lon_to_LINESTRING(dat_gps_tcx = res_tcx,
-                                                CRS = 4326,
-                                                time_split_asc_desc = lubridate::hms('17:05:00'),
-                                                verbose = TRUE)
+linestring_dat_lubr <- gps_lat_lon_to_LINESTRING(
+  dat_gps_tcx = res_tcx,
+  CRS = 4326,
+  time_split_asc_desc = lubridate::hms("17:05:00"),
+  verbose = TRUE
+)
 }
 }

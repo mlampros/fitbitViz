@@ -3,6 +3,7 @@
 ^\.ccache$
 ^\.github$
 ^.git$
-^tic\.R$
-^Dockerfile$
 ^.Rhistory$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

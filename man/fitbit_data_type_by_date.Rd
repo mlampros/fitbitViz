@@ -2,35 +2,24 @@
 % Please edit documentation in R/fitbit_utils.R
 \name{fitbit_data_type_by_date}
 \alias{fitbit_data_type_by_date}
-\title{Fitbit data retrieval for Blood Oxygen Saturation, Heart Rate Variability, Breathing Rate, Temperature and Cardio Fitness Score (or VO2 Max) by Date}
+\title{Process pre-downloaded Fitbit data for Blood Oxygen Saturation, Heart Rate Variability, Breathing Rate, Temperature and Cardio Fitness Score (or VO2 Max) by Date}
 \usage{
-fitbit_data_type_by_date(
-  user_id,
-  token,
-  date,
-  type = "spo2",
-  plot = FALSE,
-  show_nchar_case_error = 135
-)
+fitbit_data_type_by_date(data, type = "spo2", plot = FALSE)
 }
 \arguments{
-\item{user_id}{a character string specifying the encoded ID of the user. For instance '99xxxx' of the following URL 'https://www.fitbit.com/user/99xxxx' of the user's account corresponds to the 'user_id'}
-
-\item{token}{a character string specifying the secret token that a user receives when registers a new application in https://dev.fitbit.com/apps}
-
-\item{date}{a character string specifying a Date. For instance, the date '2021-12-31' where the input order is 'year-month-day'}
+\item{data}{a list object containing the pre-downloaded Fitbit data for the specified \code{type}. This is the parsed
+JSON response from the Fitbit Web API endpoint for that type and date. See the 'references' section for the
+expected structure of each data type.}
 
 \item{type}{a character string specifying the fitbit data type. One of 'spo2', 'hrv', 'br', 'temp', 'cardioscore'. See the 'details' and 'references' sections for more information}
 
 \item{plot}{a boolean. If TRUE then the minutes data will be plotted. This parameter is applicable only to the 'spo2' and 'hrv' types because they return minute data (see the details section for more information). The remaining types ('br', 'temp', 'cardioscore') return daily data.}
-
-\item{show_nchar_case_error}{an integer that specifies the number of characters that will be returned in case on an error. The default value is 135 characters.}
 }
 \value{
 a data.frame
 }
 \description{
-Fitbit data retrieval for Blood Oxygen Saturation, Heart Rate Variability, Breathing Rate, Temperature and Cardio Fitness Score (or VO2 Max) by Date
+Process pre-downloaded Fitbit data for Blood Oxygen Saturation, Heart Rate Variability, Breathing Rate, Temperature and Cardio Fitness Score (or VO2 Max) by Date
 }
 \details{
 \describe{
@@ -51,22 +40,19 @@ Fitbit data retrieval for Blood Oxygen Saturation, Heart Rate Variability, Breat
  }
 }
 \examples{
-
 \dontrun{
 
 require(fitbitViz)
 
-USER_ID = '99xxxx'
-token = 'my_long_web_api_token'
+# 'spo2_data' is the parsed JSON list from the Fitbit SpO2 intraday endpoint for a single date
+# (i.e. the result of jsonlite::fromJSON() on the API response for that date)
 
-res_type = fitbit_data_type_by_date(user_id = USER_ID,
-                                    token = token,
-                                    date = '2022-10-12',
-                                    type = 'spo2',
-                                    plot = TRUE,
-                                    show_nchar_case_error = 135)
+res_type <- fitbit_data_type_by_date(
+  data = spo2_data,
+  type = "spo2",
+  plot = TRUE
+)
 res_type
-
 }
 }
 \references{

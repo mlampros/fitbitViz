@@ -5,24 +5,20 @@
 \title{Sleep Data of single day}
 \usage{
 sleep_single_day(
-  user_id,
-  token,
+  sleep_data,
   date = "2021-03-09",
   ggplot_color_palette = "ggsci::blue_material",
-  show_nchar_case_error = 135,
   verbose = FALSE
 )
 }
 \arguments{
-\item{user_id}{a character string specifying the encoded ID of the user. For instance '99xxxx' of the following URL 'https://www.fitbit.com/user/99xxxx' of the user's account corresponds to the 'user_id'}
-
-\item{token}{a character string specifying the secret token that a user receives when registers a new application in https://dev.fitbit.com/apps}
+\item{sleep_data}{a list object containing the pre-downloaded sleep data for the specified date. This is the parsed
+JSON response from the Fitbit sleep endpoint (e.g. \code{jsonlite::fromJSON()} on the API response for
+\code{/1.2/user/[user-id]/sleep/date/[date]/[date].json}). The list must have a \code{$sleep} element.}
 
 \item{date}{a character string specifying the Date for which the sleep data should be returned. For instance, the date '2021-12-31' where the input order is 'year-month-day'}
 
 \item{ggplot_color_palette}{a character string specifying the color palette to be used. For a full list of palettes used in the ggplot see:  https://pmassicotte.github.io/paletteer_gallery/ The following color-palettes were tested and work well: "rcartocolor::Purp", "rcartocolor::Teal"}
-
-\item{show_nchar_case_error}{an integer that specifies the number of characters that will be returned in case on an error. The default value is 135 characters.}
 
 \item{verbose}{a boolean. If TRUE then information will be printed out in the console}
 }
@@ -33,21 +29,18 @@ an object of class list
 Sleep Data of single day
 }
 \examples{
-
 \dontrun{
 
 require(fitbitViz)
 
-USER_ID = '99xxxx'
-token = 'my_long_web_api_token'
+# 'sleep_data_day' is the parsed JSON list for a single date from the Fitbit sleep endpoint
 
-lst_out = sleep_single_day(user_id = USER_ID,
-                           token = token,
-                           date = '2021-03-09',
-                           ggplot_color_palette = 'ggsci::blue_material',
-                           show_nchar_case_error = 135,
-                           verbose = TRUE)
+lst_out <- sleep_single_day(
+  sleep_data = sleep_data_day,
+  date = "2021-03-09",
+  ggplot_color_palette = "ggsci::blue_material",
+  verbose = TRUE
+)
 str(lst_out)
-
 }
 }

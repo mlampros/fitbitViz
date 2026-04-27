@@ -30,46 +30,29 @@ Extract the sf-object and raster extent based on a buffer (in meters)
 To create the buffer in meters using the 'sf' package I had to transform to another projection - by default I've used 7801 - as suggested in the following stackoverflow thread, https://stackoverflow.com/a/54754935/8302386
 }
 \examples{
-
 \dontrun{
 
 require(fitbitViz)
 
-#............................
-# first extract the log-id(s)
-#............................
+# export the TCX file from the Fitbit website or app for the desired activity
 
-USER_ID = '99xxxx'
-token = 'my_long_web_api_token'
-
-log_id = extract_LOG_ID(user_id = USER_ID,
-                        token = token,
-                        after_Date = '2021-03-13',
-                        limit = 10,
-                        sort = 'asc',
-                        verbose = TRUE)
-str(log_id)
-
-#...................................
-# then return the gps-ctx data.table
-#...................................
-
-res_tcx = GPS_TCX_data(log_id = log_id,
-                       user_id = USER_ID,
-                       token = token,
-                       time_zone = 'Europe/Athens',
-                       verbose = TRUE)
+res_tcx <- GPS_TCX_data(
+  tcx_file = "/path/to/activity.tcx",
+  time_zone = "Europe/Athens",
+  verbose = TRUE
+)
 str(res_tcx)
 
-#....................................................
+# ....................................................
 # then compute the sf-object buffer and raster-extend
-#....................................................
+# ....................................................
 
-sf_rst_ext = extend_AOI_buffer(dat_gps_tcx = res_tcx,
-                               buffer_in_meters = 1000,
-                               CRS = 4326,
-                               verbose = TRUE)
+sf_rst_ext <- extend_AOI_buffer(
+  dat_gps_tcx = res_tcx,
+  buffer_in_meters = 1000,
+  CRS = 4326,
+  verbose = TRUE
+)
 sf_rst_ext
-
 }
 }

@@ -5,32 +5,21 @@
 \title{heart rate activity time series}
 \usage{
 heart_rate_time_series(
-  user_id,
-  token,
-  date_start,
-  date_end,
-  time_start = "00:00",
-  time_end = "23:59",
+  heart_rate_intraday_list,
+  heart_rate = NULL,
   detail_level = "1min",
   ggplot_intraday = FALSE,
   ggplot_ncol = NULL,
   ggplot_nrow = NULL,
-  verbose = FALSE,
-  show_nchar_case_error = 135
+  verbose = FALSE
 )
 }
 \arguments{
-\item{user_id}{a character string specifying the encoded ID of the user. For instance '99xxxx' of the following URL 'https://www.fitbit.com/user/99xxxx' of the user's account corresponds to the 'user_id'}
+\item{heart_rate_intraday_list}{a named list of data.tables with the intraday heart rate data. Each element is a data.table
+with columns \code{time} (character, format "YYYY-MM-DD HH:MM:SS") and \code{value} (numeric heart rate).
+Names must be dates in "YYYY-MM-DD" format. This is the pre-downloaded intraday heart rate data.}
 
-\item{token}{a character string specifying the secret token that a user receives when registers a new application in https://dev.fitbit.com/apps}
-
-\item{date_start}{a character string specifying a start Date. For instance, the date '2021-12-31' where the input order is 'year-month-day'}
-
-\item{date_end}{a character string specifying a end Date. For instance, the date '2021-12-31' where the input order is 'year-month-day'}
-
-\item{time_start}{a character string specifying the start time. For instance, the time '00:00' where the input order is 'hours-minutes'}
-
-\item{time_end}{a character string specifying the end time. For instance, the time '23:59' where the input order is 'hours-minutes'}
+\item{heart_rate}{either NULL or a data.frame with the daily heart rate summary data}
 
 \item{detail_level}{a character string specifying the detail level of the heart rate time series. It can be either '1min' or '1sec', for 1-minute and 1-second intervals}
 
@@ -41,8 +30,6 @@ heart_rate_time_series(
 \item{ggplot_nrow}{either NULL or an integer specifying the number of rows of the output ggplot}
 
 \item{verbose}{a boolean. If TRUE then information will be printed out in the console}
-
-\item{show_nchar_case_error}{an integer that specifies the number of characters that will be returned in case on an error. The default value is 135 characters.}
 }
 \value{
 an object of class list
@@ -51,27 +38,22 @@ an object of class list
 heart rate activity time series
 }
 \examples{
-
 \dontrun{
 
 require(fitbitViz)
 
-USER_ID = '99xxxx'
-token = 'my_long_web_api_token'
+# load pre-downloaded intraday heart rate data (one data.table per day, named by date)
+# heart_rate_intraday_list is a named list where each element has columns 'time' and 'value'
 
-heart_dat = heart_rate_time_series(user_id = USER_ID,
-                                   token = token,
-                                   date_start = '2021-03-09',
-                                   date_end = '2021-03-16',
-                                   time_start = '00:00',
-                                   time_end = '23:59',
-                                   detail_level = '1min',
-                                   ggplot_intraday = TRUE,
-                                   verbose = TRUE,
-                                   show_nchar_case_error = 135)
+heart_dat <- heart_rate_time_series(
+  heart_rate_intraday_list = heart_rate_intraday_list,
+  heart_rate = heart_rate_daily,
+  detail_level = "1min",
+  ggplot_intraday = TRUE,
+  verbose = TRUE
+)
 heart_dat$plt
 heart_dat$heart_rate
 heart_dat$heart_rate_intraday
-
 }
 }

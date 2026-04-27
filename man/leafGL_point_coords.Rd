@@ -30,48 +30,31 @@ a leaflet map of class 'leaflet'
 Create a Leafet map (including information pop-ups)
 }
 \examples{
-
 \dontrun{
 
 require(fitbitViz)
 
-#............................
-# first extract the log-id(s)
-#............................
+# export the TCX file from the Fitbit website or app for the desired activity
 
-USER_ID = '99xxxx'
-token = 'my_long_web_api_token'
-
-log_id = extract_LOG_ID(user_id = USER_ID,
-                        token = token,
-                        after_Date = '2021-03-13',
-                        limit = 10,
-                        sort = 'asc',
-                        verbose = TRUE)
-str(log_id)
-
-#...................................
-# then return the gps-ctx data.table
-#...................................
-
-res_tcx = GPS_TCX_data(log_id = log_id,
-                       user_id = USER_ID,
-                       token = token,
-                       time_zone = 'Europe/Athens',
-                       verbose = TRUE)
+res_tcx <- GPS_TCX_data(
+  tcx_file = "/path/to/activity.tcx",
+  time_zone = "Europe/Athens",
+  verbose = TRUE
+)
 str(res_tcx)
 
 
-#........................
+# ........................
 # then visualize the data
-#........................
+# ........................
 
-res_lft = leafGL_point_coords(dat_gps_tcx = res_tcx,
-                              color_points_column = 'AltitudeMeters',
-                              provider = leaflet::providers$Esri.WorldImagery,
-                              option_viewer = rstudioapi::viewer,
-                              CRS = 4326)
+res_lft <- leafGL_point_coords(
+  dat_gps_tcx = res_tcx,
+  color_points_column = "AltitudeMeters",
+  provider = leaflet::providers$Esri.WorldImagery,
+  option_viewer = rstudioapi::viewer,
+  CRS = 4326
+)
 res_lft
-
 }
 }

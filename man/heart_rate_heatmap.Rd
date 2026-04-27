@@ -18,37 +18,39 @@ a plot object of class ggplot2
 Heart Rate Intraday Heatmap (by extracting the 'min.', 'median' and 'max.' values of the day)
 }
 \examples{
-
 \dontrun{
 
 require(fitbitViz)
 
-#...........................................
+# ...........................................
 # first compute the heart rate intraday data
-#...........................................
+# ...........................................
 
-USER_ID = '99xxxx'
-token = 'my_long_web_api_token'
+USER_ID <- "99xxxx"
+token <- "my_long_web_api_token"
 
-heart_dat = heart_rate_time_series(user_id = USER_ID,
-                                   token = token,
-                                   date_start = '2021-03-09',
-                                   date_end = '2021-03-16',
-                                   time_start = '00:00',
-                                   time_end = '23:59',
-                                   detail_level = '1min',
-                                   ggplot_intraday = TRUE,
-                                   verbose = TRUE,
-                                   show_nchar_case_error = 135)
+heart_dat <- heart_rate_time_series(
+  user_id = USER_ID,
+  token = token,
+  date_start = "2021-03-09",
+  date_end = "2021-03-16",
+  time_start = "00:00",
+  time_end = "23:59",
+  detail_level = "1min",
+  ggplot_intraday = TRUE,
+  verbose = TRUE,
+  show_nchar_case_error = 135
+)
 
-#..........................................
+# ..........................................
 # use the heart-rate-intraday data as input
 # to the 'heart_rate_heatmap' function
-#..........................................
+# ..........................................
 
-hrt_heat = heart_rate_heatmap(heart_rate_intraday_data =  heart_dat$heart_rate_intraday,
-                              angle_x_axis = 0)
+hrt_heat <- heart_rate_heatmap(
+  heart_rate_intraday_data = heart_dat$heart_rate_intraday,
+  angle_x_axis = 0
+)
 hrt_heat
-
 }
 }
