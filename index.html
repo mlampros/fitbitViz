@@ -56,6 +56,12 @@
 <div class="section level2">
 <h2 id="fitbitviz">fitbitViz<a class="anchor" aria-label="anchor" href="#fitbitviz"></a>
 </h2>
+<p><strong>2026-04-27</strong>:</p>
+<ul>
+<li>
+<strong>Breaking change: Fitbit Web API dependency removed.</strong> All functions that previously required a <code>user_id</code> and <code>token</code> have been refactored to accept pre-downloaded data directly, eliminating the dependency on <code>httr</code>, <code>jsonlite</code>, and <code>base64enc</code>. This change was driven by recurring Fitbit API policy changes (GitHub issues <a href="https://github.com/mlampros/fitbitViz/issues/4" class="external-link">#4</a>, <a href="https://github.com/mlampros/fitbitViz/issues/5" class="external-link">#5</a>, <a href="https://github.com/mlampros/fitbitViz/issues/7" class="external-link">#7</a>, <a href="https://github.com/mlampros/fitbitViz/issues/8" class="external-link">#8</a>, <a href="https://github.com/mlampros/fitbitViz/issues/11" class="external-link">#11</a>).</li>
+<li>Users who need the previous API-based version can install it with <code>remotes::install_github("mlampros/fitbitViz@v1.0.7")</code> or from the CRAN archive at <code>https://cran.r-project.org/src/contrib/Archive/fitbitViz/fitbitViz_1.0.7.tar.gz</code> (the version 1.0.7 is no longer maintained)</li>
+</ul>
 <p><br></p>
 <p>The <strong>fitbitViz</strong> R package allows the extraction of data and the visualization of <em>ggplot2</em>, <em>Leaflet</em> and <em>3-dimensionsal Rayshader Maps</em> based on <em>Fitbit</em> data. If you own any of the <strong>Fitbit activity trackers</strong> you can take advantage of this package.</p>
 <p>The 3-dimensional Rayshader Map requires the installation of the <a href="https://github.com/mlampros/CopernicusDEM" class="external-link">CopernicusDEM</a> R package which includes the <strong>30- and 90-meter elevation data</strong>.</p>
