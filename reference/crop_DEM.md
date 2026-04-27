@@ -1,0 +1,109 @@
+# Function to crop the AOI from the downloaded DEM .tif file
+
+Function to crop the AOI from the downloaded DEM .tif file
+
+## Usage
+
+``` r
+crop_DEM(tif_or_vrt_dem_file, sf_buffer_obj, verbose = FALSE)
+```
+
+## Arguments
+
+- tif_or_vrt_dem_file:
+
+  a valid path to the elevation .tif or .vrt file
+
+- sf_buffer_obj:
+
+  a simple features ('sf') object that will be used to crop the input
+  elevation raster file ('tif_or_vrt_dem_file' parameter)
+
+- verbose:
+
+  a boolean. If TRUE then information will be printed out in the console
+
+## Value
+
+an object of class SpatRaster
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+
+require(fitbitViz)
+
+# export the TCX file from the Fitbit website or app for the desired activity
+
+res_tcx <- GPS_TCX_data(
+  tcx_file = "/path/to/activity.tcx",
+  time_zone = "Europe/Athens",
+  verbose = TRUE
+)
+str(res_tcx)
+
+# ....................................................
+# then compute the sf-object buffer and raster-extend
+# ....................................................
+
+sf_rst_ext <- extend_AOI_buffer(
+  dat_gps_tcx = res_tcx,
+  buffer_in_meters = 1000,
+  CRS = 4326,
+  verbose = TRUE
+)
+sf_rst_ext
+
+# ...............................................................
+# Download the Copernicus DEM 30m elevation data because it has
+# a better resolution, it takes a bit longer to download because
+# the .tif file size is bigger
+# ...............................................................
+
+dem_dir <- tempdir()
+# dem_dir
+
+dem30 <- CopernicusDEM::aoi_geom_save_tif_matches(
+  sf_or_file = sf_rst_ext$sfc_obj,
+  dir_save_tifs = dem_dir,
+  resolution = 30,
+  crs_value = 4326,
+  threads = parallel::detectCores(),
+  verbose = TRUE
+)
+
+TIF <- list.files(dem_dir, pattern = ".tif", full.names = T)
+# TIF
+
+if (length(TIF) > 1) {
+  # ....................................................
+  # create a .VRT file if I have more than 1 .tif files
+  # ....................................................
+
+  file_out <- file.path(dem_dir, "VRT_mosaic_FILE.vrt")
+
+  vrt_dem30 <- create_VRT_from_dir(
+    dir_tifs = dem_dir,
+    output_path_VRT = file_out,
+    verbose = TRUE
+  )
+}
+
+if (length(TIF) == 1) {
+  # ..................................................
+  # if I have a single .tif file keep the first index
+  # ..................................................
+
+  file_out <- TIF[1]
+}
+
+raysh_rst <- crop_DEM(
+  tif_or_vrt_dem_file = file_out,
+  sf_buffer_obj = sf_rst_ext$sfc_obj,
+  verbose = TRUE
+)
+
+terra::plot(raysh_rst)
+} # }
+```

@@ -1,0 +1,137 @@
+# Process pre-downloaded Fitbit data for Blood Oxygen Saturation, Heart Rate Variability, Breathing Rate, Temperature and Cardio Fitness Score (or VO2 Max) by Date
+
+Process pre-downloaded Fitbit data for Blood Oxygen Saturation, Heart
+Rate Variability, Breathing Rate, Temperature and Cardio Fitness Score
+(or VO2 Max) by Date
+
+## Usage
+
+``` r
+fitbit_data_type_by_date(data, type = "spo2", plot = FALSE)
+```
+
+## Arguments
+
+- data:
+
+  a list object containing the pre-downloaded Fitbit data for the
+  specified `type`. This is the parsed JSON response from the Fitbit Web
+  API endpoint for that type and date. See the 'references' section for
+  the expected structure of each data type.
+
+- type:
+
+  a character string specifying the fitbit data type. One of 'spo2',
+  'hrv', 'br', 'temp', 'cardioscore'. See the 'details' and 'references'
+  sections for more information
+
+- plot:
+
+  a boolean. If TRUE then the minutes data will be plotted. This
+  parameter is applicable only to the 'spo2' and 'hrv' types because
+  they return minute data (see the details section for more
+  information). The remaining types ('br', 'temp', 'cardioscore') return
+  daily data.
+
+## Value
+
+a data.frame
+
+## Details
+
+- 'spo2' (*Blood Oxygen Saturation*):
+
+  This endpoint returns the SpO2 intraday data for a single date. SpO2
+  applies specifically to a user's "main sleep", which is the longest
+  single period of time asleep on a given date. Spo2 values are
+  calculated on a 5-minute exponentially-moving average
+
+- 'hrv' (*Heart Rate Variability*):
+
+  This endpoint returns the Heart Rate Variability (HRV) intraday data
+  for a single date. HRV data applies specifically to a user's "main
+  sleep", which is the longest single period of time asleep on a given
+  date. It measures the HRV rate at various times and returns Root Mean
+  Square of Successive Differences (rmssd), Low Frequency (LF), High
+  Frequency (HF), and Coverage data for a given measurement. Rmssd
+  measures short-term variability in your heart rate while asleep. LF
+  and HF capture the power in interbeat interval fluctuations within
+  either high frequency or low frequency bands. Finally, coverage refers
+  to data completeness in terms of the number of interbeat intervals
+
+- 'br' (*Breathing Rate*):
+
+  This endpoint returns intraday breathing rate data for a specified
+  date. It measures the average breathing rate throughout the day and
+  categories your breathing rate by sleep stage. Sleep stages vary
+  between light sleep, deep sleep, REM sleep, and full sleep
+
+- 'temp' (*Temperature*):
+
+  This endpoint returns the Temperature (Skin) data for a single date.
+  It only returns a value for dates on which the Fitbit device was able
+  to record Temperature (skin) data. Temperature (Skin) data applies
+  specifically to a user's "main sleep", which is the longest single
+  period of time asleep on a given date
+
+- 'cardioscore' (*Cardio Fitness Score or VO2 Max*):
+
+  The Cardio Fitness Score (also known as VO2 Max) endpoints are used
+  for querying the maximum or optimum rate at which the user's heart,
+  lungs, and muscles can effectively use oxygen during exercise
+
+If the 'type' parameter is one of 'spo2' or 'hrv' and the 'plot'
+parameter is set to TRUE then the results will appear as a line plot. In
+case of 'hrv' a multiplot with the following variables will be
+displayed:
+
+- 'rmssd':
+
+  *The Root Mean Square of Successive Differences (RMSSD) between heart
+  beats. It measures short-term variability in the user's heart rate in
+  milliseconds (ms)*
+
+- 'coverage':
+
+  *Data completeness in terms of the number of interbeat intervals*
+
+- 'hf':
+
+  *The power in interbeat interval fluctuations within the high
+  frequency band (0.15 Hz - 0.4 Hz)*
+
+- 'lf':
+
+  *The power in interbeat interval fluctuations within the low frequency
+  band (0.04 Hz - 0.15 Hz)*
+
+## References
+
+https://dev.fitbit.com/build/reference/web-api/intraday/get-spo2-intraday-by-date/
+
+https://dev.fitbit.com/build/reference/web-api/intraday/get-hrv-intraday-by-date/
+
+https://dev.fitbit.com/build/reference/web-api/intraday/get-br-intraday-by-date/
+
+https://dev.fitbit.com/build/reference/web-api/temperature/get-temperature-skin-summary-by-date
+
+https://dev.fitbit.com/build/reference/web-api/cardio-fitness-score/get-vo2max-summary-by-date/
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+
+require(fitbitViz)
+
+# 'spo2_data' is the parsed JSON list from the Fitbit SpO2 intraday endpoint for a single date
+# (i.e. the result of jsonlite::fromJSON() on the API response for that date)
+
+res_type <- fitbit_data_type_by_date(
+  data = spo2_data,
+  type = "spo2",
+  plot = TRUE
+)
+res_type
+} # }
+```

@@ -1,0 +1,92 @@
+## fitbitViz
+
+  
+
+The **fitbitViz** R package allows the extraction of data and the
+visualization of *ggplot2*, *Leaflet* and *3-dimensionsal Rayshader
+Maps* based on *Fitbit* data. If you own any of the **Fitbit activity
+trackers** you can take advantage of this package.
+
+The 3-dimensional Rayshader Map requires the installation of the
+[CopernicusDEM](https://github.com/mlampros/CopernicusDEM) R package
+which includes the **30- and 90-meter elevation data**.
+
+  
+
+### Package Installation & Citation:
+
+  
+
+To install the package from CRAN use,
+
+``` r
+install.packages("fitbitViz")
+```
+
+  
+
+and to download the latest version of the package from Github,
+
+``` r
+remotes::install_github('mlampros/fitbitViz')
+```
+
+  
+
+If you use the **fitbitViz** R package in your paper or research please
+cite `https://CRAN.R-project.org/package=fitbitViz`:
+
+  
+
+``` r
+@Manual{,
+  title = {{fitbitViz}: Fitbit Visualizations},
+  author = {Lampros Mouselimis},
+  year = {2026},
+  note = {R package version 1.0.8},
+  url = {https://CRAN.R-project.org/package=fitbitViz},
+}
+```
+
+  
+
+# Package index
+
+## All functions
+
+- [`GPS_TCX_data()`](https://mlampros.github.io/fitbitViz/reference/GPS_TCX_data.md)
+  : The GPS-TCX data as a formated data.table
+- [`crop_DEM()`](https://mlampros.github.io/fitbitViz/reference/crop_DEM.md)
+  : Function to crop the AOI from the downloaded DEM .tif file
+- [`extend_AOI_buffer()`](https://mlampros.github.io/fitbitViz/reference/extend_AOI_buffer.md)
+  : Extract the sf-object and raster extent based on a buffer (in
+  meters)
+- [`fitbit_data_type_by_date()`](https://mlampros.github.io/fitbitViz/reference/fitbit_data_type_by_date.md)
+  : Process pre-downloaded Fitbit data for Blood Oxygen Saturation,
+  Heart Rate Variability, Breathing Rate, Temperature and Cardio Fitness
+  Score (or VO2 Max) by Date
+- [`gps_lat_lon_to_LINESTRING()`](https://mlampros.github.io/fitbitViz/reference/gps_lat_lon_to_LINESTRING.md)
+  : Convert the GPS, TCX data to a LINESTRING
+- [`heart_rate_heatmap()`](https://mlampros.github.io/fitbitViz/reference/heart_rate_heatmap.md)
+  : Heart Rate Intraday Heatmap (by extracting the 'min.', 'median' and
+  'max.' values of the day)
+- [`heart_rate_time_series()`](https://mlampros.github.io/fitbitViz/reference/heart_rate_time_series.md)
+  : heart rate activity time series
+- [`heart_rate_variability_sleep_time()`](https://mlampros.github.io/fitbitViz/reference/heart_rate_variability_sleep_time.md)
+  : Heart Rate Variability during Sleep Time (the root mean square of
+  successive differences)
+- [`leafGL_point_coords()`](https://mlampros.github.io/fitbitViz/reference/leafGL_point_coords.md)
+  : Create a Leafet map (including information pop-ups)
+- [`rayshader_3d_DEM()`](https://mlampros.github.io/fitbitViz/reference/rayshader_3d_DEM.md)
+  : Rayshader 3-dimensional using the Copernicus DEM elevation data
+- [`sleep_single_day()`](https://mlampros.github.io/fitbitViz/reference/sleep_single_day.md)
+  : Sleep Data of single day
+- [`sleep_time_series()`](https://mlampros.github.io/fitbitViz/reference/sleep_time_series.md)
+  : Sleep Data Time Series
+
+# Articles
+
+### All vignettes
+
+- [Functionality of the fitbitViz R
+  package](https://mlampros.github.io/fitbitViz/articles/fitbit_viz.md):

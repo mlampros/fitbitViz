@@ -1,0 +1,206 @@
+# Rayshader 3-dimensional using the Copernicus DEM elevation data
+
+Rayshader 3-dimensional using the Copernicus DEM elevation data
+
+## Usage
+
+``` r
+rayshader_3d_DEM(
+  rst_buf,
+  rst_ext,
+  linestring_ASC_DESC = NULL,
+  elevation_sample_points = NULL,
+  zoom = 0.5,
+  windowsize = c(1600, 1000),
+  add_shadow_rescale_original = FALSE,
+  verbose = FALSE
+)
+```
+
+## Arguments
+
+- rst_buf:
+
+  this parameter corresponds to the 'sfc_obj' object of the
+  'extend_AOI_buffer()' function
+
+- rst_ext:
+
+  this parameter corresponds to the 'raster_obj_extent' object of the
+  'extend_AOI_buffer()' function
+
+- linestring_ASC_DESC:
+
+  If NULL then this parameter will be ignored. Otherwise, it can be an
+  'sf' object or a named list of length 2 (that corresponds to the
+  output of the 'gps_lat_lon_to_LINESTRING()' function)
+
+- elevation_sample_points:
+
+  if NULL then this parameter will be ignored. Otherwise, it corresponds
+  to a data.table with column names 'latitude', 'longitude' and
+  'AltitudeMeters'. For instance, it can consist of 3 or 4 rows that
+  will be displayed as vertical lines in the 3-dimensionsal map to
+  visualize sample locations of the route (the latitudes and longitudes
+  must exist in the output data.table of the 'GPS_TCX_data()' function)
+
+- zoom:
+
+  a float number. Lower values increase the 3-dimensional DEM output.
+  The default value is 0.5
+
+- windowsize:
+
+  a numeric vector specifying the window dimensions (x,y) of the output
+  3-dimensional map. The default vector is c(1600, 1000)
+
+- add_shadow_rescale_original:
+
+  a boolean. If TRUE, then 'hillshade' will be scaled to match the
+  dimensions of 'shadowmap'. See also the 'rayshader::add_shadow()'
+  function for more information.
+
+- verbose:
+
+  a boolean. If TRUE then information will be printed out in the console
+
+## Value
+
+it doesn't return an object but it displays a 3-dimensional 'rayshader'
+object
+
+## References
+
+https://www.tylermw.com/a-step-by-step-guide-to-making-3d-maps-with-satellite-imagery-in-r/
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+
+require(fitbitViz)
+
+# export the TCX file from the Fitbit website or app for the desired activity
+
+res_tcx <- GPS_TCX_data(
+  tcx_file = "/path/to/activity.tcx",
+  time_zone = "Europe/Athens",
+  verbose = TRUE
+)
+str(res_tcx)
+
+# ....................................................
+# then compute the sf-object buffer and raster-extend
+# ....................................................
+
+sf_rst_ext <- extend_AOI_buffer(
+  dat_gps_tcx = res_tcx,
+  buffer_in_meters = 1000,
+  CRS = 4326,
+  verbose = TRUE
+)
+sf_rst_ext
+
+# ...............................................................
+# Download the Copernicus DEM 30m elevation data because it has
+# a better resolution, it takes a bit longer to download because
+# the .tif file size is bigger
+# ...............................................................
+
+dem_dir <- tempdir()
+# dem_dir
+
+dem30 <- CopernicusDEM::aoi_geom_save_tif_matches(
+  sf_or_file = sf_rst_ext$sfc_obj,
+  dir_save_tifs = dem_dir,
+  resolution = 30,
+  crs_value = 4326,
+  threads = parallel::detectCores(),
+  verbose = TRUE
+)
+
+TIF <- list.files(dem_dir, pattern = ".tif", full.names = T)
+# TIF
+
+if (length(TIF) > 1) {
+  # ....................................................
+  # create a .VRT file if I have more than 1 .tif files
+  # ....................................................
+
+  file_out <- file.path(dem_dir, "VRT_mosaic_FILE.vrt")
+
+  vrt_dem30 <- create_VRT_from_dir(
+    dir_tifs = dem_dir,
+    output_path_VRT = file_out,
+    verbose = TRUE
+  )
+}
+
+if (length(TIF) == 1) {
+  # ..................................................
+  # if I have a single .tif file keep the first index
+  # ..................................................
+
+  file_out <- TIF[1]
+}
+
+raysh_rst <- crop_DEM(
+  tif_or_vrt_dem_file = file_out,
+  sf_buffer_obj = sf_rst_ext$sfc_obj,
+  verbose = TRUE
+)
+
+# terra::plot(raysh_rst)
+
+
+# ................................................................
+# create the 'elevation_sample_points' data.table parameter based
+# on the min., middle  and max. altitude of the 'res_tcx' data
+# ................................................................
+
+idx_3m <- c(
+  which.min(res_tcx$AltitudeMeters),
+  as.integer(length(res_tcx$AltitudeMeters) / 2),
+  which.max(res_tcx$AltitudeMeters)
+)
+
+cols_3m <- c("latitude", "longitude", "AltitudeMeters")
+dat_3m <- res_tcx[idx_3m, ..cols_3m]
+# dat_3m
+
+# ...............................................................
+# Split the route in 2 parts based on the maximum altitude value
+# ...............................................................
+
+linestring_dat <- gps_lat_lon_to_LINESTRING(
+  dat_gps_tcx = res_tcx,
+  CRS = 4326,
+  time_split_asc_desc = NULL,
+  verbose = TRUE
+)
+
+# .....................................................
+# Conversion of the 'SpatRaster' to a raster object
+# because the 'rayshader' package accepts only rasters
+# .....................................................
+
+rst_obj <- raster::raster(raysh_rst)
+raster::projection(rst_obj) <- terra::crs(raysh_rst, proj = TRUE)
+
+
+# .....................................
+# open the 3-dimensional rayshader map
+# .....................................
+
+ray_out <- rayshader_3d_DEM(
+  rst_buf = rst_obj,
+  rst_ext = sf_rst_ext$raster_obj_extent,
+  linestring_ASC_DESC = linestring_dat,
+  elevation_sample_points = dat_3m,
+  zoom = 0.5,
+  windowsize = c(1600, 1000),
+  add_shadow_rescale_original = FALSE,
+  verbose = TRUE
+)
+} # }
+```
